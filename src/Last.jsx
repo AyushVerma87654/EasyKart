@@ -38,8 +38,8 @@ function Last() {
     <>
       <div className="overflow-y-scroll h-screen bg-gray-300">
         <NavBar data={total} />
-        <div className="px-8 py-16 p-2 h-screen flex">
-          <div className="px-8 py-[14px] grow bg-white">
+        <div className="px-8 py-16 p-2 flex">
+          <div className="px-8 py-[14px] grow h-auto bg-white">
             <Routes>
               <Route index element={<ProductList />}></Route>
               <Route
