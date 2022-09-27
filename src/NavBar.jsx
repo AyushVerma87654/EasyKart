@@ -1,5 +1,6 @@
 import React from "react";
 import { CgShoppingCart } from "react-icons/cg";
+import { Link } from "react-router-dom";
 
 function NavBar({ data }) {
   return (
@@ -10,7 +11,9 @@ function NavBar({ data }) {
           src="https://easykartindia.com/img/logo1.png"
         />
         <div className="flex flex-col items-center -mb-4">
-          <CgShoppingCart className="text-4xl" />
+          <Link to="/cart">
+            <CgShoppingCart className="text-4xl" />
+          </Link>
           <p>{data}</p>
         </div>
       </div>
