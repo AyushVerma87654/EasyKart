@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import ProductDisplay from "./ProductDisplay";
 import PageNotFound from "./PageNotFound";
 import { useEffect } from "react";
+import CartPage from "./CartPage";
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
@@ -35,16 +36,17 @@ function Last() {
 
   return (
     <>
-      <div className="flex flex-col h-screen overflow-y-scroll bg-gray-300">
+      <div className="overflow-y-scroll h-screen bg-gray-300">
         <NavBar data={total} />
-        <div className="px-8 py-16 p-2">
-          <div className="px-8 py-[14px] bg-white">
+        <div className="px-8 py-16 p-2 flex">
+          <div className="px-8 py-[14px] grow h-auto bg-white">
             <Routes>
               <Route index element={<ProductList />}></Route>
               <Route
                 path="/product/:id"
                 element={<ProductDisplay onAddToCart={onAddToCart} />}
               ></Route>
+              <Route path="/cart" element={<CartPage />}></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>
           </div>
