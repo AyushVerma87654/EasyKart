@@ -14,7 +14,6 @@ function CartList() {
       {data.map(function (item) {
         return <CartRow {...item} />;
       })}
-      {/* <p>Cart List</p> */}
     </div>
   );
 }
