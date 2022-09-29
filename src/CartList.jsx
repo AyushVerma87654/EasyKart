@@ -35,17 +35,14 @@ function CartList({ cart }) {
 
   useEffect(
     function () {
-      let arr = product.map(function (item) {
-        return item.price * quantity[j++];
-      });
-      setTotal(
-        arr.reduce(function (output, current) {
-          return output + current;
-        }, 0)
-      );
+      let arr = product.reduce(function (output, current) {
+        return output + current.price * quantity[j++];
+      }, 0);
+      setTotal(arr);
     },
     [product]
   );
+  console.log(total);
 
   if (loading) {
     return <Loading />;
