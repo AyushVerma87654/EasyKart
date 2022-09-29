@@ -12,7 +12,7 @@ function Product({ thumbnail, category, title, price, id }) {
         <div>
           <p className="text-gray-400 pt-2 text-xs">{category}</p>
           <h1 className="font-bold my-1 text-sm">{title}</h1>
-          <h1 className="font-bold text-sm"> $ {price}</h1>
+          <h1 className="font-bold text-sm"> Rs. {price}</h1>
         </div>
         <div className="pt-4 shrink-0">
           <Link className="bg-blue-500 text-lg p-2" to={"/product/" + id}>

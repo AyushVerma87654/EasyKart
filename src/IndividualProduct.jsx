@@ -15,26 +15,15 @@ function IndividualProduct({
   brand,
   stock,
   onAddToCart,
-  // onLink,
 }) {
   const [input, setInput] = useState(1);
-  // let x = 0;
 
-  // x = onLink();
-
-  // if (x == 1) {
-  //   setInput(1);
-  // }
-
-  // useEffect(
-  //   function () {
-  //     if (x == 1) {
-  //       console.log(input);
-  //       setInput(1);
-  //     }
-  //   },
-  //   [x]
-  // );
+  useEffect(
+    function () {
+      setInput(1);
+    },
+    [id]
+  );
 
   function handleInputChange(event) {
     setInput(+event.target.value);
@@ -52,7 +41,7 @@ function IndividualProduct({
       </div>
       <div className="px-4 space-y-2 text-gray-700">
         <h1 className="text-3xl font-semibold">{title}</h1>
-        <h1 className="text-2xl font-bold">$ {price}</h1>
+        <h1 className="text-2xl font-bold">Rs. {price}</h1>
         <h1 className="">
           Brand : <span className="text-red-400">{brand}</span>
         </h1>
