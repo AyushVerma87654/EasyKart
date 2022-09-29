@@ -10,9 +10,6 @@ function ProductDisplay({ onAddToCart }) {
   const id = +useParams().id;
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState();
-  // let [z, setZ] = useState(0);
-
-  // console.log(z);
 
   useEffect(
     function () {
@@ -28,11 +25,6 @@ function ProductDisplay({ onAddToCart }) {
     [id]
   );
 
-  // function onLink() {
-  //   // console.log("onLink called");
-  //   return 1;
-  // }
-
   if (loading) {
     return <Loading />;
   }
@@ -44,38 +36,20 @@ function ProductDisplay({ onAddToCart }) {
         Back
       </Link>
 
-      <IndividualProduct
-        {...product}
-        onAddToCart={onAddToCart}
-        // onLink={onLink}
-      />
+      <IndividualProduct {...product} onAddToCart={onAddToCart} />
 
       <div className="flex justify-between px-12">
         <div>
           {id > 1 && (
-            <Link
-              to={"/product/" + (id - 1)}
-              // onClick={onLink}
-              className="flex items-center"
-            >
-              <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
-              Previous
-            </Link>
-          )}
-          {/* {(z == 0 && z++) || (
             <Link to={"/product/" + (id - 1)} className="flex items-center">
               <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
               Previous
             </Link>
-          )} */}
+          )}
         </div>
         <div>
           {id < 100 && (
-            <Link
-              to={"/product/" + (id + 1)}
-              // onClick={onLink}
-              className="flex items-center"
-            >
+            <Link to={"/product/" + (id + 1)} className="flex items-center">
               Next
               <HiArrowCircleRight className="text-5xl ml-5 px-1" />
             </Link>

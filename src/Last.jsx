@@ -46,7 +46,7 @@ function Last() {
                 path="/product/:id"
                 element={<ProductDisplay onAddToCart={onAddToCart} />}
               ></Route>
-              <Route path="/cart" element={<CartPage />}></Route>
+              <Route path="/cart" element={<CartPage cart={cart} />}></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>
           </div>
