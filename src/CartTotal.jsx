@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import CartButton from "./CartButton";
 
 function CartTotal({ total }) {
@@ -30,4 +30,4 @@ function CartTotal({ total }) {
   );
 }
 
-export default CartTotal;
+export default memo(CartTotal);

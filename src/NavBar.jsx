@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { CgShoppingCart } from "react-icons/cg";
 import { Link } from "react-router-dom";
 
@@ -23,4 +23,4 @@ function NavBar({ data }) {
   );
 }
 
-export default NavBar;
+export default memo(NavBar);

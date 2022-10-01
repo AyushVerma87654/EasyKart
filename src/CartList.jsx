@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getProduct } from "./Api";
 import CartButton from "./CartButton";
 import CartRow from "./CartRow";
@@ -14,39 +14,26 @@ function CartList({ cart }) {
   let i = 0;
   let j = 0;
 
-  useEffect(function () {
-    const token = Object.keys(cart).map(function (item) {
-      return getProduct(item);
-    });
+  useEffect(() => {
+    const token = Object.keys(cart).map((item) => getProduct(item));
 
     const lastPromise = Promise.all(token);
 
-    lastPromise.then(function (products) {
+    lastPromise.then((products) => {
       setProduct(products);
       setLoading(false);
     });
 
-    setQuantity(
-      Object.keys(cart).map(function (item) {
-        return cart[item];
-      })
-    );
+    setQuantity(Object.keys(cart).map((item) => cart[item]));
   }, []);
 
-  useEffect(
-    function () {
-      let arr = product.map(function (item) {
-        return item.price * quantity[j++];
-      });
-      setTotal(
-        arr.reduce(function (output, current) {
-          return output + current;
-        }, 0)
-      );
-    },
-    [product]
-  );
-
+  useEffect(() => {
+    setTotal(
+      product.reduce(function (output, current) {
+        return output + current.price * quantity[j++];
+      }, 0)
+    );
+  }, [product]);
   if (loading) {
     return <Loading />;
   }
