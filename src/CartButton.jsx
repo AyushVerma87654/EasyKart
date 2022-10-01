@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 function CartButton({ data }) {
   return (
@@ -8,4 +8,4 @@ function CartButton({ data }) {
   );
 }
 
-export default CartButton;
+export default memo(CartButton);
