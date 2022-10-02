@@ -40,30 +40,59 @@ function CartList({ cart }) {
 
   return (
     <div>
-      <div className="flex border border-gray-300 bg-gray-100 items-center justify-end pl-40 space-x-4 h-12">
-        <p className="w-96 p-2">Product</p>
-        <p className="w-24 p-2">Price</p>
-        <p className="w-28 p-2">Quantity</p>
-        <p className="w-32 p-2 ml-2">Subtotal</p>
-      </div>
-      {product.map(function (item) {
-        return <CartRow key={item.title} {...item} quantity={quantity[i++]} />;
-      })}
-      <div className="border border-gray-300 h-14 py-2 px-3 flex items-center justify-between">
-        <div className="flex">
-          <input
-            className="pl-1 w-52 h-9 border-2 border-gray-300"
-            placeholder="Coupon Code"
-          />
-          <div className="w-52 h-9 ml-2">
-            <CartButton data="APPLY COUPON" />
+      <div className="block sm:hidden">
+        {product.map(function (item) {
+          return (
+            <CartRow key={item.title} {...item} quantity={quantity[i++]} />
+          );
+        })}
+        <div className="border text-sm w-full border-gray-300 h-auto py-2 px-3 flex flex-col">
+          <div className="flex">
+            <input
+              className="p-1 grow h-9 border-2 border-gray-300"
+              placeholder="COUPON CODE"
+            />
+            <div className="grow h-9 ml-2">
+              <CartButton data="APPLY COUPON" />
+            </div>
+          </div>
+          <div className="mt-3 h-10 grow">
+            <CartButton data="UPDATE CART" />
           </div>
         </div>
-        <div className="w-52 h-10">
-          <CartButton data="UPDATE CART" />
+        <CartTotal total={total} />
+      </div>
+
+      <div className="hidden sm:block">
+        <div className="w-full">
+          <div className="flex border border-gray-300 bg-gray-100 items-center justify-end pl-40 space-x-4 h-12">
+            <p className="w-96 p-2">Product</p>
+            <p className="w-24 p-2">Price</p>
+            <p className="w-28 p-2">Quantity</p>
+            <p className="w-32 p-2 ml-2">Subtotal</p>
+          </div>
+          {product.map(function (item) {
+            return (
+              <CartRow key={item.title} {...item} quantity={quantity[i++]} />
+            );
+          })}
+          <div className="border border-gray-300 h-14 py-2 px-3 flex items-center justify-between">
+            <div className="flex">
+              <input
+                className="pl-1 w-52 h-9 border-2 border-gray-300"
+                placeholder="Coupon Code"
+              />
+              <div className="w-52 h-9 ml-2">
+                <CartButton data="APPLY COUPON" />
+              </div>
+            </div>
+            <div className="w-52 h-10">
+              <CartButton data="UPDATE CART" />
+            </div>
+          </div>
+          <CartTotal total={total} />
         </div>
       </div>
-      <CartTotal total={total} />
     </div>
   );
 }

@@ -58,15 +58,15 @@ function ProductList() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex justify-end mt-2">
         <input
-          className="bg-gray-200 border border-gray-400 w-48 h-9 p-1"
+          className="bg-gray-200 border border-gray-400 w-44 h-9 p-1"
           placeholder="Search"
           onChange={handleQueryChange}
         />
         <select
-          className="bg-gray-200 border border-gray-400 w-48 h-9 ml-2 p-1"
+          className="bg-gray-200 border border-gray-400 w-44 h-9 ml-2 p-1"
           name="Mugs"
           value={sort}
           onChange={handleSortChange}

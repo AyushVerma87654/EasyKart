@@ -9,11 +9,11 @@ import CartPage from "./CartPage";
 import Login from "./Login";
 import SignUpPage from "./SignUpPage";
 import ForgetPassword from "./ForgetPassword";
+import MobileMenu from "./MobileMenu";
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
   const savedCart = JSON.parse(savedData);
-  // let [total, setTotal] = useState(0);let total
   const [cart, setCart] = useState(savedCart);
   const [loading, setLoading] = useState(0);
 
@@ -31,14 +31,12 @@ function Last() {
     }, 0);
   }, [cart]);
 
-  console.log(total);
-
   return (
-    <>
-      <div className="overflow-y-scroll h-screen bg-gray-300">
+    <div className="flex flex-col flex-wrap">
+      <div className="h-auto bg-gray-300">
         <NavBar data={total} />
         <div className="px-8 py-16 p-2 flex">
-          <div className="px-8 py-[14px] grow h-auto bg-white">
+          <div className="px-6 py-[14px] grow h-auto bg-white">
             <Routes>
               <Route path="/signup" element={<SignUpPage />}></Route>
               <Route path="/forget" element={<ForgetPassword />}></Route>
@@ -55,7 +53,7 @@ function Last() {
         </div>
         <Footer />
       </div>
-    </>
+    </div>
   );
 }
 
