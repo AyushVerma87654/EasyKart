@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Product({ thumbnail, category, title, price, id }) {
   return (
     <div className="max-w-xs">
-      <div className=" w-full aspect-square">
+      <div className=" w-full aspect-square mt-1">
         <img className="w-full h-full" src={thumbnail} />
       </div>
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 function NoMatching() {
   return (
@@ -8,4 +8,4 @@ function NoMatching() {
   );
 }
 
-export default NoMatching;
+export default memo(NoMatching);

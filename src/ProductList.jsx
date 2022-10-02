@@ -8,48 +8,49 @@ function ProductList() {
   let [query, setQuery] = useState("");
   let [data, setData] = useState([]);
   const [sort, setSort] = useState("default");
-  let [allData, setAllData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(function () {
+  useEffect(() => {
     let token = getProductList();
-    token.then(function (data) {
-      setAllData(data);
-      setData(data);
+    token.then((products) => {
       setLoading(false);
+      setData(products);
     });
   }, []);
-  query = "";
 
-  function handleQueryChange(event) {
+  let handleQueryChange = (event) => {
     const newQuery = event.target.value;
-
-    data = allData.filter(function (item) {
+    data = allData.filter((item) => {
       const lowerCaseQuery = newQuery.toLowerCase();
       const lowerCaseTitle = item.title.toLowerCase();
-
       return lowerCaseTitle.indexOf(lowerCaseQuery) != -1;
     });
     setQuery(newQuery);
     setData(data);
-  }
+  };
 
   function handleSortChange(event) {
-    setSort(event.target.value);
-  }
+    const checkSort = event.target.value;
 
-  if (sort == "title") {
-    data = data.sort(function (x, y) {
-      return x.title < y.title ? -1 : 1;
-    });
-  } else if (sort == "lowtohigh") {
-    data = data.sort(function (x, y) {
-      return x.price - y.price;
-    });
-  } else if (sort == "hightolow") {
-    data = data.sort(function (x, y) {
-      return y.price - x.price;
-    });
+    if (checkSort == "title") {
+      data = data.sort((x, y) => {
+        return x.title < y.title ? -1 : 1;
+      });
+    } else if (checkSort == "lowtohigh") {
+      data = data.sort((x, y) => {
+        return x.price - y.price;
+      });
+    } else if (checkSort == "hightolow") {
+      data = data.sort((x, y) => {
+        return y.price - x.price;
+      });
+    } else if (checkSort == "default") {
+      data = data.sort((x, y) => {
+        return x.id - y.id;
+      });
+    }
+    setData(data);
+    setSort(checkSort);
   }
 
   if (loading) {
@@ -57,15 +58,15 @@ function ProductList() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex justify-end mt-2">
         <input
-          className="bg-gray-200 border border-gray-400 w-48 h-9 p-1"
+          className="bg-gray-200 border border-gray-400 w-44 h-9 p-1"
           placeholder="Search"
           onChange={handleQueryChange}
         />
         <select
-          className="bg-gray-200 border border-gray-400 w-48 h-9 ml-2 p-1"
+          className="bg-gray-200 border border-gray-400 w-44 h-9 ml-2 p-1"
           name="Mugs"
           value={sort}
           onChange={handleSortChange}

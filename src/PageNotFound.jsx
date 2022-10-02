@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { HiArrowCircleLeft } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
@@ -22,4 +22,4 @@ function PageNotFound() {
   );
 }
 
-export default PageNotFound;
+export default memo(PageNotFound);
