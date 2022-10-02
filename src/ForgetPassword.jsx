@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Errors from "./Errors";
-import Input from "./Input";
+import FormikInput from "./FormikInput";
 
 function ForgetPassword() {
   const loginApi = ({ email }) => console.log("Sending Data", email);
@@ -30,7 +30,7 @@ function ForgetPassword() {
         validateOnMount
       >
         <Form className="border border-gray-400 rounded-md px-5 py-7 mb-10 font-semibold">
-          <Input
+          <FormikInput
             label="Enter Email"
             name="email"
             type="email"

@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import Input from "./Input";
+import FormikInput from "./FormikInput";
 
 function Login() {
   const loginApi = (values) =>
@@ -29,7 +29,7 @@ function Login() {
         validateOnMount
       >
         <Form className="border font-semibold rounded-md border-gray-400 p-5 mb-20">
-          <Input
+          <FormikInput
             label="Email Address"
             id="email"
             name="email"
@@ -37,7 +37,7 @@ function Login() {
             autoComplete="email"
           />
 
-          <Input
+          <FormikInput
             label="Password"
             id="password"
             name="password"
