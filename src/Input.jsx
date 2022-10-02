@@ -1,12 +1,7 @@
-import { useField } from "formik";
 import React from "react";
+import FormikHoc from "./FormikHoc";
 
-function Input({ name, id, label, required, ...rest }) {
-  const [data, meta] = useField(name);
-  //   const {value , onBlur , onChange} = data;
-  const { error, touched } = meta;
-  console.log(required);
-
+export function Input({ name, id, label, touched, error, ...rest }) {
   let border = "border-gray-300";
 
   if (touched && error) {
@@ -24,7 +19,6 @@ function Input({ name, id, label, required, ...rest }) {
       <input
         id={id}
         name={name}
-        {...data}
         {...rest}
         className={
           "focus:outline-none rounded-md border-2 w-full px-3 h-12 focus:border-blue-500 " +
@@ -37,4 +31,5 @@ function Input({ name, id, label, required, ...rest }) {
   );
 }
 
-export default Input;
+export default FormikHoc(Input);
+// export default Input;
