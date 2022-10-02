@@ -3,8 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import Errors from "./Errors";
-import FormikInput from "./FormikInput";
+import FormikHoc from "./Input";
 
 function SignUpPage() {
   const loginApi = ({ fullname, email, username, password, confirmpassword }) =>
@@ -43,35 +42,35 @@ function SignUpPage() {
         validateOnMount
       >
         <Form className="border border-gray-400 rounded-md px-5 py-7 mb-10 font-semibold">
-          <FormikInput
+          <FormikHoc
             label="Full Name"
             name="fullname"
             type="text"
             id="fullname"
             autoComplete="text"
           />
-          <FormikInput
+          <FormikHoc
             label="Email"
             name="email"
             type="email"
             id="email"
             autoComplete="email"
           />
-          <FormikInput
+          <FormikHoc
             label="Username"
             name="username"
             type="text"
             id="username"
             autoComplete="text"
           />
-          <FormikInput
+          <FormikHoc
             label="Password"
             name="password"
             type="password"
             id="password"
             autoComplete="text"
           />
-          <FormikInput
+          <FormikHoc
             label="Confirm Password"
             name="confirmpassword"
             type="password"

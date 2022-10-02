@@ -1,7 +1,7 @@
-import { useField } from "formik";
 import React from "react";
+import FormikHoc from "./FormikHoc";
 
-function Input({ name, id, label, touched, error, ...rest }) {
+export function Input({ name, id, label, touched, error, ...rest }) {
   let border = "border-gray-300";
 
   if (touched && error) {
@@ -31,4 +31,5 @@ function Input({ name, id, label, touched, error, ...rest }) {
   );
 }
 
-export default Input;
+export default FormikHoc(Input);
+// export default Input;
