@@ -1,11 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useEffect } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { Context } from "./Last";
 
-function CartRow({ thumbnail, price, title, quantity }) {
+function CartRow({
+  thumbnail,
+  price,
+  id,
+  title,
+  quantity,
+  changes,
+  setChanges,
+}) {
   const [input, setInput] = useState(quantity);
+  const [count, setCount] = useState(0);
+
+  // const data = useContext(Context);
+
   function handleInputChange(event) {
-    setInput(event.target.value);
+    let counts = +event.target.value;
+    setCount(counts);
+    setInput(counts);
+    setChanges(false);
+    // console.log(i);
   }
+
+  useEffect(
+    function () {
+      if (count) {
+        console.log(id, count);
+        setInput(1);
+        // data(id, count);
+        setChanges(false);
+      }
+    },
+    [changes]
+  );
+
+  // function handleInputChange(event) {
+  //   if (change) {
+  //     let count = +event.target.value;
+  //     // data(id, count);
+  //     console.log(id, count);
+  //     setInput(1);
+  //   }
+  //   setChange(0);
+  //   setInput(event.target.value);
+  // }
 
   return (
     <div>
@@ -32,6 +73,7 @@ function CartRow({ thumbnail, price, title, quantity }) {
               value={input}
               type="number"
               onChange={handleInputChange}
+              // onChangeCapture={handleInputChange}
             />
           </div>
           <div className="flex justify-between h-11 px-2 py-3 border border-gray-300">
@@ -40,22 +82,22 @@ function CartRow({ thumbnail, price, title, quantity }) {
           </div>
         </div>
       </div>
-      <div className="hidden sm:block">
+      {/* <div className="hidden sm:block">
         <div className="flex border border-gray-300 items-center space-x-8 px-5 py-2 h-16">
           <AiOutlineCloseCircle className="text-gray-300" />
           <img className="p-1 w-14 aspect-square" src={thumbnail} />
           <p className="px-4 text-red-500 w-96 font-bold">{title}</p>
           <p className="w-20">Rs.{price}</p>
           <input
-            onChange={handleInputChange}
-            value={input}
+            // onChange={handleInputChange}
+            // value={input}
             type="number"
             className="pl-5 py-0.5 w-12 h-6 text-xs font-semibold border border-gray-300 text-gray-500"
           />
 
-          <p className="px-12">Rs.{quantity * price}</p>
+          <p className="px-12">Rs.{input * price}</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

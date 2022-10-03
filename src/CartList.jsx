@@ -10,20 +10,22 @@ function CartList({ cart }) {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
+  const [changes, setChanges] = useState(false);
+
+  function handleUpdateChange() {
+    setChanges(true);
+  }
 
   let i = 0;
   let j = 0;
 
   useEffect(() => {
     const token = Object.keys(cart).map((item) => getProduct(item));
-
     const lastPromise = Promise.all(token);
-
     lastPromise.then((products) => {
       setProduct(products);
       setLoading(false);
     });
-
     setQuantity(Object.keys(cart).map((item) => cart[item]));
   }, []);
 
@@ -43,7 +45,13 @@ function CartList({ cart }) {
       <div className="block sm:hidden">
         {product.map(function (item) {
           return (
-            <CartRow key={item.title} {...item} quantity={quantity[i++]} />
+            <CartRow
+              key={item.title}
+              {...item}
+              quantity={quantity[i++]}
+              changes={changes}
+              setChanges={setChanges}
+            />
           );
         })}
         <div className="border text-sm w-full border-gray-300 h-auto py-2 px-3 flex flex-col">
@@ -57,13 +65,17 @@ function CartList({ cart }) {
             </div>
           </div>
           <div className="mt-3 h-10 grow">
-            <CartButton data="UPDATE CART" />
+            <CartButton
+              data="UPDATE CART"
+              onClick={handleUpdateChange}
+              type="button"
+            />
           </div>
         </div>
         <CartTotal total={total} />
       </div>
 
-      <div className="hidden sm:block">
+      {/* <div className="hidden sm:block">
         <div className="w-full">
           <div className="flex border border-gray-300 bg-gray-100 items-center justify-end pl-40 space-x-4 h-12">
             <p className="w-96 p-2">Product</p>
@@ -87,12 +99,12 @@ function CartList({ cart }) {
               </div>
             </div>
             <div className="w-52 h-10">
-              <CartButton data="UPDATE CART" />
+              <CartButton onClick={handleUpdateChange} data="UPDATE CART" />
             </div>
           </div>
           <CartTotal total={total} />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

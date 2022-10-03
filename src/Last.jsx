@@ -10,6 +10,10 @@ import Login from "./Login";
 import SignUpPage from "./SignUpPage";
 import ForgetPassword from "./ForgetPassword";
 import MobileMenu from "./MobileMenu";
+import Loading from "./Loading";
+import CartButton from "./CartButton";
+
+export const Context = React.createContext();
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
@@ -21,6 +25,7 @@ function Last() {
     const newCart = { ...cart, [productId]: (cart[productId] || 0) + count };
     const cartData = JSON.stringify(newCart);
     localStorage.setItem("Cart", cartData);
+    console.log(productId, count);
     setCart(newCart);
     setLoading(productId);
   };
@@ -31,12 +36,17 @@ function Last() {
     }, 0);
   }, [cart]);
 
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div className="flex flex-col flex-wrap">
       <div className="h-auto bg-gray-300">
         <NavBar data={total} />
         <div className="px-8 py-16 p-2 flex">
           <div className="px-6 py-[14px] grow h-auto bg-white">
+            {/* <Context.Provider value={onAddToCart}> */}
             <Routes>
               <Route path="/signup" element={<SignUpPage />}></Route>
               <Route path="/forget" element={<ForgetPassword />}></Route>
@@ -49,6 +59,7 @@ function Last() {
               <Route path="/cart" element={<CartPage cart={cart} />}></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>
+            {/* </Context.Provider> */}
           </div>
         </div>
         <Footer />
