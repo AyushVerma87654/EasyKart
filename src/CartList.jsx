@@ -51,6 +51,7 @@ function CartList({ cart }) {
               quantity={quantity[i++]}
               changes={changes}
               setChanges={setChanges}
+              cart={cart}
             />
           );
         })}
@@ -75,7 +76,7 @@ function CartList({ cart }) {
         <CartTotal total={total} />
       </div>
 
-      {/* <div className="hidden sm:block">
+      <div className="hidden sm:block">
         <div className="w-full">
           <div className="flex border border-gray-300 bg-gray-100 items-center justify-end pl-40 space-x-4 h-12">
             <p className="w-96 p-2">Product</p>
@@ -104,7 +105,7 @@ function CartList({ cart }) {
           </div>
           <CartTotal total={total} />
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -11,16 +11,25 @@ function CartRow({
   quantity,
   changes,
   setChanges,
+  cart,
 }) {
   const [input, setInput] = useState(quantity);
   const [count, setCount] = useState(0);
+  const [localCart, setLocalCart] = useState(cart);
 
-  // const data = useContext(Context);
+  const data = useContext(Context);
+
+  console.log("Local Cart", localCart);
+  // console.log("Original Cart in CartRow", cart);
 
   function handleInputChange(event) {
     let counts = +event.target.value;
-    setCount(counts);
+    // if()
+    const carts = { ...localCart, [id]: counts };
+    console.log("Cart in inputchange", carts);
+    setLocalCart(carts);
     setInput(counts);
+    setCount(count);
     setChanges(false);
     // console.log(i);
   }
@@ -29,7 +38,7 @@ function CartRow({
     function () {
       if (count) {
         console.log(id, count);
-        setInput(1);
+        setInput(count);
         // data(id, count);
         setChanges(false);
       }
@@ -82,7 +91,7 @@ function CartRow({
           </div>
         </div>
       </div>
-      {/* <div className="hidden sm:block">
+      <div className="hidden sm:block">
         <div className="flex border border-gray-300 items-center space-x-8 px-5 py-2 h-16">
           <AiOutlineCloseCircle className="text-gray-300" />
           <img className="p-1 w-14 aspect-square" src={thumbnail} />
@@ -97,7 +106,7 @@ function CartRow({
 
           <p className="px-12">Rs.{input * price}</p>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }
