@@ -32,9 +32,7 @@ function CartPage({ cart, updateCart }) {
     return <Loading />;
   }
 
-  console.log(product);
-
-  if (!cart) {
+  if (!product.length) {
     return <CartEmpty />;
   }
 
