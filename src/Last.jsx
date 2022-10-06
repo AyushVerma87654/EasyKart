@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import ProductList from "./ProductList";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
@@ -9,20 +9,21 @@ import CartPage from "./CartPage";
 import Login from "./Login";
 import SignUpPage from "./SignUpPage";
 import ForgetPassword from "./ForgetPassword";
-import MobileMenu from "./MobileMenu";
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
   const savedCart = JSON.parse(savedData);
   const [cart, setCart] = useState(savedCart);
-  const [loading, setLoading] = useState(0);
 
   let onAddToCart = (productId, count) => {
     const newCart = { ...cart, [productId]: (cart[productId] || 0) + count };
+    updateCart(newCart);
+  };
+
+  let updateCart = (newCart) => {
+    setCart(newCart);
     const cartData = JSON.stringify(newCart);
     localStorage.setItem("Cart", cartData);
-    setCart(newCart);
-    setLoading(productId);
   };
 
   let total = useMemo(() => {
@@ -35,7 +36,7 @@ function Last() {
     <div className="flex flex-col flex-wrap">
       <div className="h-auto bg-gray-300">
         <NavBar data={total} />
-        <div className="px-8 py-16 p-2 flex">
+        <div className="px-8 py-16 flex">
           <div className="px-6 py-[14px] grow h-auto bg-white">
             <Routes>
               <Route path="/signup" element={<SignUpPage />}></Route>
@@ -46,7 +47,10 @@ function Last() {
                 path="/product/:id"
                 element={<ProductDisplay onAddToCart={onAddToCart} />}
               ></Route>
-              <Route path="/cart" element={<CartPage cart={cart} />}></Route>
+              <Route
+                path="/cart"
+                element={<CartPage cart={cart} updateCart={updateCart} />}
+              ></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>
           </div>
