@@ -1,10 +1,20 @@
 import React from "react";
-import FormikHoc from "./FormikHoc";
 
-export function Input({ name, id, label, touched, error, ...rest }) {
+function Input({
+  name,
+  id,
+  type,
+  label,
+  touched,
+  errors,
+  onBlur,
+  onChange,
+  values,
+  autoComplete,
+}) {
   let border = "border-gray-300";
 
-  if (touched && error) {
+  if (touched && errors) {
     border = "border-red-500";
   }
 
@@ -17,19 +27,22 @@ export function Input({ name, id, label, touched, error, ...rest }) {
       </div>
 
       <input
-        id={id}
         name={name}
-        {...rest}
+        id={id}
+        type={type}
+        values={values}
+        onBlur={onBlur}
+        onChange={onChange}
+        autoComplete={autoComplete}
         className={
           "focus:outline-none rounded-md border-2 w-full px-3 h-12 focus:border-blue-500 " +
           border
         }
       />
 
-      {touched && error && <div className="text-red-500">{error}</div>}
+      {touched && errors && <div className="text-red-500">{errors}</div>}
     </div>
   );
 }
 
-export default FormikHoc(Input);
-// export default Input;
+export default Input;
