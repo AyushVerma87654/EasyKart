@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import FormikHoc from "./Input";
+import { Navigate } from "react-router-dom";
 
 const loginApi = ({
   fullname,
@@ -48,7 +49,11 @@ export function SignUpPage({
   errors,
   isValid,
   resetForm,
+  user,
 }) {
+  if (user) {
+    return <Navigate to="/" />;
+  }
   return (
     <div className="text-gray-600 py-4">
       <h1 className="font-bold text-2xl mt-3 mb-6">Sign Up</h1>

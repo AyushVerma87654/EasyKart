@@ -1,6 +1,6 @@
 import { withFormik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
@@ -23,7 +23,11 @@ function ForgetPassword({
   touched,
   errors,
   isValid,
+  user,
 }) {
+  if (user) {
+    return <Navigate to="/" />;
+  }
   return (
     <div className="p-12 text-orange-500 w-full">
       <h1 className="my-4 mb-8 font-bold">

@@ -4,10 +4,15 @@ import { getProduct } from "./Api";
 import CartTotal from "./CartTotal";
 import Loading from "./Loading";
 import CartEmpty from "./CartEmpty";
+import { Navigate } from "react-router-dom";
 
-function CartPage({ cart, updateCart }) {
+function CartPage({ cart, updateCart, user }) {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   useEffect(() => {
     setLoading(true);
