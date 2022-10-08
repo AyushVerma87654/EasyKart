@@ -9,11 +9,39 @@ import CartPage from "./CartPage";
 import Login from "./Login";
 import SignUpPage from "./SignUpPage";
 import ForgetPassword from "./ForgetPassword";
+import { useEffect } from "react";
+import axios from "axios";
+import Loading from "./Loading";
+// import NewUser from "./NewUser";
+// import OldUser from "./OldUser";
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
   const savedCart = JSON.parse(savedData);
   const [cart, setCart] = useState(savedCart);
+  const [user, setUser] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const token = localStorage.getItem("Token");
+  console.log(token);
+
+  useEffect(() => {
+    if (token) {
+      axios
+        .get("https://myeasykart.codeyogi.io/me", {
+          headers: { Authorization: token },
+        })
+        .then((response) => {
+          setUser(response.data);
+          console.log(response.data);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  console.log(user);
 
   let onAddToCart = (productId, count) => {
     const newCart = { ...cart, [productId]: (cart[productId] || 0) + count };
@@ -32,6 +60,10 @@ function Last() {
     }, 0);
   }, [cart]);
 
+  if (loading) {
+    <Loading />;
+  }
+
   return (
     <div className="flex flex-col flex-wrap">
       <div className="h-auto bg-gray-300">
@@ -39,17 +71,41 @@ function Last() {
         <div className="px-8 py-16 flex">
           <div className="px-6 py-[14px] grow h-auto bg-white">
             <Routes>
-              <Route path="/signup" element={<SignUpPage />}></Route>
-              <Route path="/forget" element={<ForgetPassword />}></Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route index element={<ProductList />}></Route>
+              <Route
+                path="/signup"
+                element={<SignUpPage user={user} />}
+              ></Route>
+              <Route
+                path="/forget"
+                element={<ForgetPassword user={user} />}
+              ></Route>
+              <Route
+                path="/login"
+                element={
+                  // <NewUser user={user}>
+                  <Login setUser={setUser} user={user} />
+                  // </NewUser>
+                }
+              ></Route>
+              <Route
+                index
+                element={
+                  // <OldUser user={user}>
+                  <ProductList user={user} />
+                  // </OldUser>
+                }
+              ></Route>
               <Route
                 path="/product/:id"
-                element={<ProductDisplay onAddToCart={onAddToCart} />}
+                element={
+                  <ProductDisplay user={user} onAddToCart={onAddToCart} />
+                }
               ></Route>
               <Route
                 path="/cart"
-                element={<CartPage cart={cart} updateCart={updateCart} />}
+                element={
+                  <CartPage cart={cart} user={user} updateCart={updateCart} />
+                }
               ></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>

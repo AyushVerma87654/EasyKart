@@ -1,12 +1,25 @@
+import axios from "axios";
 import { withFormik } from "formik";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
 
-function callLoginApi(values) {
-  console.log("call Login Api", values);
+function callLoginApi(values, bag) {
+  axios
+    .post("https://myeasykart.codeyogi.io/login", {
+      email: values.email,
+      password: values.password,
+    })
+    .then((response) => {
+      const { user, token } = response.data;
+      localStorage.setItem("Token", token);
+      bag.props.setUser(user);
+    })
+    .catch(() => {
+      console.log("Invalid Data");
+    });
 }
 
 const initialValues = {
@@ -27,7 +40,11 @@ function Login({
   errors,
   values,
   isValid,
+  user,
 }) {
+  if (user) {
+    return <Navigate to="/" />;
+  }
   return (
     <div className="text-gray-600">
       <h1 className="text-2xl font-bold my-6">Login</h1>
@@ -72,6 +89,7 @@ function Login({
 
             <div className="h-10 my-2">
               <CartButton type="submit" data="LOG IN" disabled={!isValid} />
+              {/* <CartButton type="submit" data="LOG IN" /> */}
             </div>
 
             <div>
