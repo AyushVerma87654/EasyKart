@@ -1,52 +1,72 @@
-import { Form, Formik } from "formik";
+import { withFormik } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import FormikHoc from "./Input";
+import Input from "./Input";
 
-function ForgetPassword() {
-  const loginApi = ({ email }) => console.log("Sending Data", email);
+const loginApi = ({ email }) => console.log("Sending Data", email);
 
-  const schema = Yup.object().shape({
-    email: Yup.string().email().required(),
-  });
+const schema = Yup.object().shape({
+  email: Yup.string().email().required(),
+});
 
-  const initialValues = {
-    email: "",
-  };
+const initialValues = {
+  email: "",
+};
 
+function ForgetPassword({
+  handleSubmit,
+  handleChange,
+  handleBlur,
+  values,
+  touched,
+  errors,
+  isValid,
+}) {
   return (
     <div className="p-12 text-orange-500 w-full">
       <h1 className="my-4 mb-8 font-bold">
         Lost your password? Please enter your email address. You will receive a
         link to create a new password via email.
       </h1>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={loginApi}
-        validationSchema={schema}
-        validateOnMount
+      <form
+        onSubmit={handleSubmit}
+        className="border border-gray-400 rounded-md px-5 py-7 mb-10 font-semibold"
       >
-        <Form className="border border-gray-400 rounded-md px-5 py-7 mb-10 font-semibold">
-          <FormikHoc
-            label="Enter Email"
-            name="email"
-            type="email"
-            id="email"
-            autoComplete="text"
-          />
+        <Input
+          label="Enter Email"
+          name="email"
+          type="email"
+          id="email"
+          autoComplete="email"
+          values={values}
+          touched={touched.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          errors={errors.email}
+        />
 
-          <div className="flex items-center my-4">
-            <div className="w-40 h-12 mr-20">
-              <CartButton data="Reset Password" type="submit" />
-            </div>
-            <Link to="/login">Back To Login Page</Link>
+        <div className="flex items-center my-4">
+          <div className="w-40 h-12 mr-20">
+            <CartButton
+              data="Reset Password"
+              type="submit"
+              disabled={!isValid}
+            />
           </div>
-        </Form>
-      </Formik>
+          <Link to="/login">Back To Login Page</Link>
+        </div>
+      </form>
     </div>
   );
 }
 
-export default ForgetPassword;
+const myHoc = withFormik({
+  initialValues: initialValues,
+  handleSubmit: loginApi,
+  validationSchema: schema,
+  validateOnMount: "true",
+});
+
+export default myHoc(ForgetPassword);

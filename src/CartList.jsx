@@ -32,11 +32,11 @@ function CartList({ cart, updateCart, product }) {
           className="flex border border-gray-300 bg-gray-100 items-center 
         pl-14 pr-12 h-12 space-x-8"
         >
-          <p className="ml-11 mr-4">Images</p>
+          <p className="ml-9 px-0.5 mr-4">Images</p>
           <p className="grow px-1.5">Product</p>
-          <p className="w-16">Price</p>
+          <p className="w-16 p-0.5">Price</p>
           <p className="w-16">Quantity</p>
-          <p className="w-16">Subtotal</p>
+          <p className="w-16 p-0.5">Subtotal</p>
         </div>
       </div>
       {product.map((item) => (
