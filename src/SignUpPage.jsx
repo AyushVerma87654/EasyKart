@@ -1,29 +1,27 @@
-import { Formik, Form, withFormik } from "formik";
+import { withFormik } from "formik";
 import Input from "./Input";
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import FormikHoc from "./Input";
-import { Navigate } from "react-router-dom";
+import axios from "axios";
 
-const loginApi = ({
-  fullname,
-  email,
-  username,
-  password,
-  confirmpassword,
-  resetForm,
-}) =>
-  console.log(
-    "Sending Data",
-    fullname,
-    email,
-    username,
-    password,
-    confirmpassword
-  );
-
+function loginApi(values, bag) {
+  axios
+    .post("https://myeasykart.codeyogi.io/signup", {
+      fullName: values.fullname,
+      email: values.email,
+      password: values.password,
+    })
+    .then((response) => {
+      const { user, token } = response.data;
+      localStorage.setItem("Token", token);
+      bag.props.setUser(user);
+    })
+    .catch(() => {
+      console.log("Invalid Data");
+    });
+}
 const schema = Yup.object().shape({
   fullname: Yup.string().required(),
   email: Yup.string().email().required(),
@@ -49,11 +47,7 @@ export function SignUpPage({
   errors,
   isValid,
   resetForm,
-  user,
 }) {
-  if (user) {
-    return <Navigate to="/" />;
-  }
   return (
     <div className="text-gray-600 py-4">
       <h1 className="font-bold text-2xl mt-3 mb-6">Sign Up</h1>
@@ -128,7 +122,7 @@ export function SignUpPage({
             </div>
 
             <div className="my-2 h-10">
-              <CartButton data="RESET" type="button" onClick={resetForm} />
+              <CartButton data="RESET" type="submit" onClick={resetForm} />
             </div>
           </div>
 

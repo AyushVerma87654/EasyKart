@@ -5,16 +5,11 @@ import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
 import { getProduct } from "./Api";
 import Loading from "./Loading";
 import PageNotFound from "./PageNotFound";
-import { Navigate } from "react-router-dom";
 
-function ProductDisplay({ onAddToCart, user }) {
+function ProductDisplay({ onAddToCart }) {
   const id = +useParams().id;
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState();
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
 
   useEffect(
     function () {

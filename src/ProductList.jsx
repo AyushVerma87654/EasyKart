@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { getProductList } from "./Api";
 import Loading from "./Loading";
 import NoMatching from "./NoMatching";
 import ProductDetail from "./ProductDetail";
+
 function ProductList({ user }) {
   let [query, setQuery] = useState("");
   let [data, setData] = useState([]);
   const [sort, setSort] = useState("default");
   const [loading, setLoading] = useState(true);
-
-  console.log(user);
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
 
   useEffect(() => {
     let token = getProductList();

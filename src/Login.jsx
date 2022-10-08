@@ -1,7 +1,7 @@
 import axios from "axios";
 import { withFormik } from "formik";
 import React from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
@@ -40,11 +40,7 @@ function Login({
   errors,
   values,
   isValid,
-  user,
 }) {
-  if (user) {
-    return <Navigate to="/" />;
-  }
   return (
     <div className="text-gray-600">
       <h1 className="text-2xl font-bold my-6">Login</h1>
