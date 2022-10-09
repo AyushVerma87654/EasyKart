@@ -4,6 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
+import { withAlert, withUser } from "./ContextHoc";
 import Input from "./Input";
 
 function callLoginApi(values, bag) {
@@ -16,9 +17,13 @@ function callLoginApi(values, bag) {
       const { user, token } = response.data;
       localStorage.setItem("Token", token);
       bag.props.setUser(user);
+      bag.props.setAlert({
+        type: "success",
+        message: "Login Completed Successfully",
+      });
     })
     .catch(() => {
-      console.log("Invalid Data");
+      bag.props.setAlert({ type: "error", message: "Invalid Credentials" });
     });
 }
 
@@ -85,7 +90,6 @@ function Login({
 
             <div className="h-10 my-2">
               <CartButton type="submit" data="LOG IN" disabled={!isValid} />
-              {/* <CartButton type="submit" data="LOG IN" /> */}
             </div>
 
             <div>
@@ -109,6 +113,6 @@ const myHoc = withFormik({
   validationSchema: schema,
   handleSubmit: callLoginApi,
   validateOnMount: "true",
-});
+})(Login);
 
-export default myHoc(Login);
+export default withAlert(withUser(myHoc));

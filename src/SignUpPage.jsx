@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import axios from "axios";
+import { withAlert, withUser } from "./ContextHoc";
 
 function loginApi(values, bag) {
   axios
@@ -17,9 +18,13 @@ function loginApi(values, bag) {
       const { user, token } = response.data;
       localStorage.setItem("Token", token);
       bag.props.setUser(user);
+      bag.props.setAlert({
+        type: "success",
+        message: "SignUp Completed Successfully",
+      });
     })
     .catch(() => {
-      console.log("Invalid Data");
+      bag.props.setAlert({ type: "error", message: "Invalid Credentials" });
     });
 }
 const schema = Yup.object().shape({
@@ -140,6 +145,6 @@ const myHoc = withFormik({
   handleSubmit: loginApi,
   validationSchema: schema,
   validateOnMount: "true",
-});
+})(SignUpPage);
 
-export default myHoc(SignUpPage);
+export default withUser(withAlert(myHoc));

@@ -5,7 +5,7 @@ function Product({ thumbnail, category, title, price, id }) {
   return (
     <div className="max-w-xs">
       <div className=" w-full aspect-square mt-1">
-        <img className="w-full h-full" src={thumbnail} />
+        <img className="w-full h-full object-cover" src={thumbnail} />
       </div>
 
       <div className="flex justify-around items-center">

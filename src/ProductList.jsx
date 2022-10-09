@@ -4,7 +4,7 @@ import Loading from "./Loading";
 import NoMatching from "./NoMatching";
 import ProductDetail from "./ProductDetail";
 
-function ProductList({ user }) {
+function ProductList() {
   let [query, setQuery] = useState("");
   let [data, setData] = useState([]);
   const [sort, setSort] = useState("default");
@@ -61,12 +61,12 @@ function ProductList({ user }) {
     <div className="flex flex-col w-full">
       <div className="flex justify-end mt-2">
         <input
-          className="bg-gray-200 border border-gray-400 w-44 h-9 p-1"
+          className="bg-gray-200 border border-gray-400 w-40 sm:48 h-9 p-1"
           placeholder="Search"
           onChange={handleQueryChange}
         />
         <select
-          className="bg-gray-200 border border-gray-400 w-44 h-9 ml-2 p-1"
+          className="bg-gray-200 border border-gray-400 w-40 sm:w-48 h-9 ml-2 p-1"
           name="Mugs"
           value={sort}
           onChange={handleSortChange}
@@ -77,7 +77,7 @@ function ProductList({ user }) {
           <option value="hightolow">Sort by price high to low</option>
         </select>
       </div>
-      {data.length > 0 && <ProductDetail products={data} user={user} />}
+      {data.length > 0 && <ProductDetail products={data} />}
       {data.length == 0 && <NoMatching />}
     </div>
   );
