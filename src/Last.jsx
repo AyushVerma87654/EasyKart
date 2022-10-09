@@ -13,8 +13,10 @@ import axios from "axios";
 import Loading from "./Loading";
 import NewUser from "./NewUser";
 import OldUser from "./OldUser";
-
-export const UserContext = React.createContext();
+import { UserContext } from "./Context";
+import { AlertContext } from "./Context";
+import CartButton from "./CartButton";
+import Alert from "./Alert";
 
 function Last() {
   const savedData = localStorage.getItem("Cart") || "{}";
@@ -22,8 +24,7 @@ function Last() {
   const [cart, setCart] = useState(savedCart);
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
-
-  const userData = { user, setUser };
+  const [alert, setAlert] = useState();
 
   useEffect(() => {
     const token = localStorage.getItem("Token");
@@ -58,6 +59,13 @@ function Last() {
     }, 0);
   }, [cart]);
 
+  const handleButtonRemoveUser = () => {
+    setUser(undefined);
+    localStorage.removeItem("Token");
+  };
+
+  const removeAlert = () => setAlert();
+
   if (loading) {
     <Loading />;
   }
@@ -65,69 +73,82 @@ function Last() {
   return (
     <div className="flex flex-col flex-wrap">
       <div className="h-auto bg-gray-300">
-        {user && (
-          <div className="flex items-center justify-center font-bold text-2xl text-blue-700 bg-red-500 h-20 w-full">
-            Hey {user.full_name}, Welcome Back!
-          </div>
-        )}
-        <UserContext.Provider value={userData}>
-          <NavBar data={total} />
-          <div className="px-8 py-16 flex">
-            <div className="px-6 py-[14px] grow h-auto bg-white">
-              <Routes>
-                <Route
-                  path="/signup"
-                  element={
-                    <NewUser>
-                      <SignUpPage setUser={setUser} />
-                    </NewUser>
-                  }
-                ></Route>
-                <Route
-                  path="/forget"
-                  element={
-                    <OldUser>
-                      <ForgetPassword />
-                    </OldUser>
-                  }
-                ></Route>
-                <Route
-                  path="/login"
-                  element={
-                    <NewUser>
-                      <Login setUser={setUser} user={user} />
-                    </NewUser>
-                  }
-                ></Route>
-                <Route
-                  index
-                  element={
-                    <OldUser>
-                      <ProductList user={user} />
-                    </OldUser>
-                  }
-                ></Route>
-                <Route
-                  path="/product/:id"
-                  element={
-                    <OldUser>
-                      <ProductDisplay user={user} onAddToCart={onAddToCart} />
-                    </OldUser>
-                  }
-                ></Route>
-                <Route
-                  path="/cart"
-                  element={
-                    <OldUser>
-                      <CartPage cart={cart} updateCart={updateCart} />
-                    </OldUser>
-                  }
-                ></Route>
-                <Route path="*" element={<PageNotFound />}></Route>
-              </Routes>
+        <UserContext.Provider value={{ user, setUser }}>
+          <AlertContext.Provider value={{ alert, setAlert, removeAlert }}>
+            <Alert />
+            {user && (
+              <div className="bg-red-500 font-bold text-2xl w-full text-blue-700 p-4">
+                <div className="flex items-center justify-center h-20">
+                  Hey {user.full_name}, Welcome Back!
+                </div>
+                <div className="w-40 h-12">
+                  <CartButton
+                    data="Logout"
+                    className="text-blue-700 text-2xl font-bold"
+                    onClick={handleButtonRemoveUser}
+                  />
+                </div>
+              </div>
+            )}
+
+            <NavBar data={total} />
+            <div className="px-8 py-16 flex">
+              <div className="px-6 py-[14px] grow h-auto bg-white">
+                <Routes>
+                  <Route
+                    path="/signup"
+                    element={
+                      <NewUser>
+                        <SignUpPage />
+                      </NewUser>
+                    }
+                  ></Route>
+                  <Route
+                    path="/forget"
+                    element={
+                      <OldUser>
+                        <ForgetPassword />
+                      </OldUser>
+                    }
+                  ></Route>
+                  <Route
+                    path="/login"
+                    element={
+                      <NewUser>
+                        <Login />
+                      </NewUser>
+                    }
+                  ></Route>
+                  <Route
+                    index
+                    element={
+                      <OldUser>
+                        <ProductList />
+                      </OldUser>
+                    }
+                  ></Route>
+                  <Route
+                    path="/product/:id"
+                    element={
+                      <OldUser>
+                        <ProductDisplay onAddToCart={onAddToCart} />
+                      </OldUser>
+                    }
+                  ></Route>
+                  <Route
+                    path="/cart"
+                    element={
+                      <OldUser>
+                        <CartPage cart={cart} updateCart={updateCart} />
+                      </OldUser>
+                    }
+                  ></Route>
+                  <Route path="*" element={<PageNotFound />}></Route>
+                </Routes>
+              </div>
             </div>
-          </div>
-          <Footer />
+            <Footer />
+          </AlertContext.Provider>
         </UserContext.Provider>
       </div>
     </div>
