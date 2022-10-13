@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CartButton from "./CartButton";
 import CartRow from "./CartRow";
+import { withCart } from "./ContextHoc";
 
 function CartList({ cart, updateCart, product }) {
   const [localCart, setLocalCart] = useState(cart);
@@ -71,4 +72,4 @@ function CartList({ cart, updateCart, product }) {
   );
 }
 
-export default CartList;
+export default withCart(CartList);

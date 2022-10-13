@@ -2,6 +2,7 @@ import { Input } from "postcss";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import { withCart } from "./ContextHoc";
 
 function IndividualProduct({
   thumbnail,
@@ -80,4 +81,4 @@ function IndividualProduct({
   );
 }
 
-export default IndividualProduct;
+export default withCart(IndividualProduct);

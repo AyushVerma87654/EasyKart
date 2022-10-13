@@ -1,6 +1,5 @@
-import React from "react";
 import { useContext } from "react";
-import { AlertContext, UserContext } from "./Context";
+import { AlertContext, CartContext, UserContext } from "./Context";
 
 const ContextHoc =
   (Context) =>
@@ -14,3 +13,4 @@ export default ContextHoc;
 
 export const withUser = ContextHoc(UserContext);
 export const withAlert = ContextHoc(AlertContext);
+export const withCart = ContextHoc(CartContext);

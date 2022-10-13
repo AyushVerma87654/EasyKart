@@ -20,6 +20,7 @@ function Alert({ alert, removeAlert }) {
     const timeout = setTimeout(removeAlert, 3 * 1000);
     return () => clearTimeout(timeout);
   }, [alert]);
+  console.log(alert);
   if (!alert) {
     return;
   }

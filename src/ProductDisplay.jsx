@@ -6,7 +6,7 @@ import { getProduct } from "./Api";
 import Loading from "./Loading";
 import PageNotFound from "./PageNotFound";
 
-function ProductDisplay({ onAddToCart }) {
+function ProductDisplay() {
   const id = +useParams().id;
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState();
@@ -36,7 +36,7 @@ function ProductDisplay({ onAddToCart }) {
         Back
       </Link>
 
-      <IndividualProduct {...product} onAddToCart={onAddToCart} />
+      <IndividualProduct {...product} />
 
       <div className="flex justify-between px-12">
         <div>

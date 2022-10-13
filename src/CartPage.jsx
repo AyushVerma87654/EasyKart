@@ -4,8 +4,9 @@ import { getProduct } from "./Api";
 import CartTotal from "./CartTotal";
 import Loading from "./Loading";
 import CartEmpty from "./CartEmpty";
+import { withCart } from "./ContextHoc";
 
-function CartPage({ cart, updateCart }) {
+function CartPage({ cart }) {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,10 +39,10 @@ function CartPage({ cart, updateCart }) {
 
   return (
     <div className="my-14 mx-auto max-w-5xl">
-      <CartList cart={cart} updateCart={updateCart} product={product} />
+      <CartList />
       <CartTotal total={total} />
     </div>
   );
 }
 
-export default CartPage;
+export default withCart(CartPage);
