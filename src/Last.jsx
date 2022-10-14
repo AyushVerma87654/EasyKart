@@ -12,8 +12,6 @@ import ForgetPassword from "./ForgetPassword";
 import NewUser from "./NewUser";
 import OldUser from "./OldUser";
 import CartButton from "./CartButton";
-// import AlertDetail from "./AlertShow";
-import AlertList from "./AlertList";
 import AlertProvider from "../Providers/AlertProvider";
 import UserProvider from "../Providers/UserProvider";
 import { withAlert, withUser } from "./ContextHoc";
@@ -21,7 +19,6 @@ import { CartContext } from "./Context";
 
 function Last({ user, alert, handleButtonRemoveUser }) {
   const [refresh, setRefresh] = useState(true);
-  console.log(alert);
 
   useEffect(() => {
     setRefresh(!refresh);
