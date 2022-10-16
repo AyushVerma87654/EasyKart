@@ -18,10 +18,10 @@ const theme = {
 function Alert({ alert, removeAlert }) {
   useEffect(() => {
     const timeout = setTimeout(removeAlert, 3 * 1000);
-    return clearTimeout(timeout);
+    return () => clearTimeout(timeout);
   }, [alert]);
   if (!alert) {
-    return;
+    return <></>;
   }
 
   const { type, message } = alert;
