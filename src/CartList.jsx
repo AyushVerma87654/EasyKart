@@ -3,27 +3,27 @@ import CartButton from "./CartButton";
 import CartRow from "./CartRow";
 import { withCart } from "./ContextHoc";
 
-function CartList({ cart, updateCart, product }) {
-  const [localCart, setLocalCart] = useState(cart);
+function CartList({ cart, updateCart, toMap }) {
+  const [quantityMap, setQuantityMap] = useState({});
 
   useEffect(() => {
-    setLocalCart(cart);
+    setQuantityMap(toMap(cart));
   }, [cart]);
 
   let onAddFromCart = (productId, count) => {
-    const newCart = { ...localCart, [productId]: count };
-    setLocalCart(newCart);
+    const newCart = { ...quantityMap, [productId]: count };
+    setQuantityMap(newCart);
   };
 
   let onDeleteFromCart = (productId) => {
-    const newCart = { ...localCart };
+    const newCart = { ...quantityMap };
     delete newCart[productId];
-    setLocalCart(newCart);
+    setQuantityMap(newCart);
     updateCart(newCart);
   };
 
   function handleUpdateChange() {
-    updateCart(localCart);
+    updateCart(quantityMap);
   }
 
   return (
@@ -40,11 +40,11 @@ function CartList({ cart, updateCart, product }) {
           <p className="w-16 p-0.5">Subtotal</p>
         </div>
       </div>
-      {product.map((item) => (
+      {cart.map((item) => (
         <CartRow
-          {...item}
-          key={item.id}
-          quantity={cart[item.id]}
+          {...item.product}
+          key={item.product.id}
+          quantity={item.quantity}
           onAddFromCart={onAddFromCart}
           onDeleteFromCart={onDeleteFromCart}
         />

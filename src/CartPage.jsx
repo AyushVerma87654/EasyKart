@@ -1,46 +1,17 @@
 import CartList from "./CartList";
-import React, { useEffect, useMemo, useState } from "react";
-import { getProduct } from "./Api";
+import React from "react";
 import CartTotal from "./CartTotal";
-import Loading from "./Loading";
-import CartEmpty from "./CartEmpty";
 import { withCart } from "./ContextHoc";
+import CartEmpty from "./CartEmpty";
 
 function CartPage({ cart }) {
-  const [product, setProduct] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    const token = Object.keys(cart).map((item) => getProduct(item));
-    const lastPromise = Promise.all(token);
-    lastPromise.then((products) => {
-      setProduct(products);
-      setLoading(false);
-    });
-  }, [cart]);
-
-  let total = useMemo(() => {
-    let i = 0;
-    let arr1 = product.map((item) => item.price);
-    let q = Object.keys(cart).map((item) => cart[item]);
-    return arr1.reduce((output, current) => {
-      return output + current * q[i++];
-    }, 0);
-  }, [product]);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (!product.length) {
+  if (cart.length == 0) {
     return <CartEmpty />;
   }
-
   return (
     <div className="my-14 mx-auto max-w-5xl">
       <CartList />
-      <CartTotal total={total} />
+      <CartTotal />
     </div>
   );
 }

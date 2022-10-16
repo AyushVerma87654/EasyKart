@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CgMenuGridO } from "react-icons/cg";
 import MobileMenu from "./MobileMenu";
@@ -6,16 +6,10 @@ import LaptopMenu from "./LaptopMenu";
 import { CgShoppingCart } from "react-icons/cg";
 import { withCart } from "./ContextHoc";
 
-function NavBar({ cart }) {
+function NavBar({ totalCount }) {
   const [show, setShow] = useState(false);
 
   const handleOpener = () => setShow(!show);
-
-  let total = useMemo(() => {
-    return Object.keys(cart).reduce((output, current) => {
-      return output + cart[current];
-    }, 0);
-  }, [cart]);
 
   return (
     <div className="px-8 sm:px-12 md:px-16 lg:px-20 h-32 w-full text-orange-500 bg-white">
@@ -31,7 +25,7 @@ function NavBar({ cart }) {
           <Link to="/cart">
             <div className="flex flex-col pb-10 mr-3 items-center">
               <CgShoppingCart className="text-4xl" />
-              <p className="-m-7 text-xs pl-1 font-bold">{total}</p>
+              <p className="-m-7 text-xs pl-1 font-bold">{totalCount}</p>
             </div>
           </Link>
           <div className="flex">
@@ -53,7 +47,7 @@ function NavBar({ cart }) {
         </div>
 
         <div className="p-1 mb-2">
-          <LaptopMenu data={total} />
+          <LaptopMenu data={totalCount} />
         </div>
       </div>
     </div>

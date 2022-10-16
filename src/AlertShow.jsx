@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { MdVerified } from "react-icons/md";
 import { GoUnverified } from "react-icons/go";
 import CartButton from "./CartButton";
-import { withAlert } from "./ContextHoc";
-import AlertList from "./AlertList";
 
 const theme = {
   success: {
@@ -64,11 +62,3 @@ function AlertShow({ data, id, max, handleRemove }) {
 }
 
 export default AlertShow;
-
-// useEffect(() => {
-//   if (alert) {
-//     const newList = { [id + 1]: alert };
-//     setList([...list, newList]);
-//     setId(id + 1);
-//   }
-// }, [alert]);

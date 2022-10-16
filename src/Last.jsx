@@ -12,10 +12,8 @@ import ForgetPassword from "./ForgetPassword";
 import NewUser from "./NewUser";
 import OldUser from "./OldUser";
 import CartButton from "./CartButton";
-import AlertProvider from "../Providers/AlertProvider";
-import UserProvider from "../Providers/UserProvider";
 import { withAlert, withUser } from "./ContextHoc";
-import { CartContext } from "./Context";
+import Alert from "./Alert";
 
 function Last({ user, alert, handleButtonRemoveUser }) {
   const [refresh, setRefresh] = useState(true);
@@ -27,6 +25,7 @@ function Last({ user, alert, handleButtonRemoveUser }) {
   return (
     <div className="flex flex-col flex-wrap">
       <div className="h-auto bg-gray-300">
+        <Alert />
         {user && (
           <div className="bg-red-500 font-bold text-2xl w-full text-blue-700 p-4">
             <div className="flex items-center justify-center h-20">
@@ -48,51 +47,23 @@ function Last({ user, alert, handleButtonRemoveUser }) {
               <Route
                 path="/signup"
                 element={
-                  <NewUser>
-                    <SignUpPage />
-                  </NewUser>
-                }
-              ></Route>
-              <Route
-                path="/forget"
-                element={
                   <OldUser>
-                    <ForgetPassword />
+                    <SignUpPage />
                   </OldUser>
                 }
               ></Route>
+              <Route path="/forget" element={<ForgetPassword />}></Route>
               <Route
                 path="/login"
                 element={
-                  <NewUser>
+                  <OldUser>
                     <Login />
-                  </NewUser>
-                }
-              ></Route>
-              <Route
-                index
-                element={
-                  <OldUser>
-                    <ProductList />
                   </OldUser>
                 }
               ></Route>
-              <Route
-                path="/product/:id"
-                element={
-                  <OldUser>
-                    <ProductDisplay />
-                  </OldUser>
-                }
-              ></Route>
-              <Route
-                path="/cart"
-                element={
-                  <OldUser>
-                    <CartPage />
-                  </OldUser>
-                }
-              ></Route>
+              <Route index element={<ProductList />}></Route>
+              <Route path="/product/:id" element={<ProductDisplay />}></Route>
+              <Route path="/cart" element={<CartPage />}></Route>
               <Route path="*" element={<PageNotFound />}></Route>
             </Routes>
           </div>

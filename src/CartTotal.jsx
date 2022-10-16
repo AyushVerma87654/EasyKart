@@ -1,5 +1,6 @@
-import React, { memo } from "react";
+import React from "react";
 import CartButton from "./CartButton";
+import { withCart } from "./ContextHoc";
 
 function CartTotal({ total }) {
   return (
@@ -30,4 +31,4 @@ function CartTotal({ total }) {
   );
 }
 
-export default memo(CartTotal);
+export default withCart(CartTotal);

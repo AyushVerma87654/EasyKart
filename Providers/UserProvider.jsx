@@ -7,8 +7,10 @@ function UserProvider({ children }) {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const token = localStorage.getItem("Token");
+  const isLoggedIn = !!token;
+
   useEffect(() => {
-    const token = localStorage.getItem("Token");
     if (token) {
       axios
         .get("https://myeasykart.codeyogi.io/me", {
@@ -38,7 +40,9 @@ function UserProvider({ children }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, handleButtonRemoveUser }}>
+    <UserContext.Provider
+      value={{ user, setUser, handleButtonRemoveUser, isLoggedIn }}
+    >
       {children}
     </UserContext.Provider>
   );

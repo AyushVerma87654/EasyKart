@@ -4,8 +4,8 @@ import { UserContext } from "./Context";
 
 function OldUser({ children }) {
   const { user } = useContext(UserContext);
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (user) {
+    return <Navigate to="/" />;
   }
 
   return children;
