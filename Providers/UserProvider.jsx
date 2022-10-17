@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { UserContext } from "../src/Context";
 import Loading from "../src/Loading";
 import axios from "axios";
