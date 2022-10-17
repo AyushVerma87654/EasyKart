@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductList from "./ProductList";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
@@ -12,10 +12,10 @@ import ForgetPassword from "./ForgetPassword";
 import NewUser from "./NewUser";
 import OldUser from "./OldUser";
 import CartButton from "./CartButton";
-import { withAlert, withUser } from "./ContextHoc";
+import { withUser } from "./ContextHoc";
 import Alert from "./Alert";
 
-function Last({ user, alert, handleButtonRemoveUser }) {
+function Last({ user, handleButtonRemoveUser }) {
   const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
@@ -74,4 +74,4 @@ function Last({ user, alert, handleButtonRemoveUser }) {
   );
 }
 
-export default withUser(withAlert(Last));
+export default withUser(Last);

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getCart, getProductById, saveCart } from "../src/Api";
 import { CartContext } from "../src/Context";
 import { withUser } from "../src/ContextHoc";
