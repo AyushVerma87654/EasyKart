@@ -1,77 +1,54 @@
-import React, { useEffect, useState } from "react";
-import ProductList from "./ProductList";
-import NavBar from "./NavBar";
-import Footer from "./Footer";
-import { Route, Routes } from "react-router-dom";
-import ProductDisplay from "./ProductDisplay";
-import PageNotFound from "./PageNotFound";
-import CartPage from "./CartPage";
-import Login from "./Login";
-import SignUpPage from "./SignUpPage";
-import ForgetPassword from "./ForgetPassword";
-import NewUser from "./NewUser";
-import OldUser from "./OldUser";
-import CartButton from "./CartButton";
-import { withUser } from "./ContextHoc";
-import Alert from "./Alert";
+import React, { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import Other from "./Other";
 
-function Last({ user, handleButtonRemoveUser }) {
-  const [refresh, setRefresh] = useState(true);
-
-  useEffect(() => {
-    setRefresh(!refresh);
-  }, [user]);
-
+function Last() {
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  if (input == "play" && loading) {
+    console.log(input);
+    return <Navigate to="/result" />;
+  }
+  const handleChange = (event) => {
+    setLoading(false);
+    setInput(event.target.value);
+  };
+  const handleC = () => {
+    console.log("cccc");
+    return <Link to="/result" />;
+  };
+  const handleClick = () => {
+    setLoading(true);
+  };
   return (
-    <div className="flex flex-col flex-wrap">
-      <div className="h-auto bg-gray-300">
-        <Alert />
-        {user && (
-          <div className="bg-red-500 font-bold text-2xl w-full text-blue-700 p-4">
-            <div className="flex items-center justify-center h-20">
-              Hey {user.full_name}, Welcome Back!
-            </div>
-            <div className="w-40 h-12">
-              <CartButton
-                data="Logout"
-                className="text-blue-700 text-2xl font-bold"
-                onClick={handleButtonRemoveUser}
-              />
-            </div>
-          </div>
-        )}
-        <NavBar />
-        <div className="px-8 py-16 flex">
-          <div className="px-6 py-[14px] grow h-auto bg-white">
-            <Routes>
-              <Route
-                path="/signup"
-                element={
-                  <OldUser>
-                    <SignUpPage />
-                  </OldUser>
-                }
-              ></Route>
-              <Route path="/forget" element={<ForgetPassword />}></Route>
-              <Route
-                path="/login"
-                element={
-                  <OldUser>
-                    <Login />
-                  </OldUser>
-                }
-              ></Route>
-              <Route index element={<ProductList />}></Route>
-              <Route path="/product/:id" element={<ProductDisplay />}></Route>
-              <Route path="/cart" element={<CartPage />}></Route>
-              <Route path="*" element={<PageNotFound />}></Route>
-            </Routes>
-          </div>
+    <div>
+      <div className="flex h-screen flex-col items-center justify-center space-y-4">
+        <div className="text-3xl text-green-500 font-bold">
+          Guess my favourite hobby?
         </div>
-        <Footer />
+        <input
+          className="border-4 focus:outline-none h-10 p-2 border-blue-500 focus:border-red-500"
+          value={input}
+          placeholder="Enter here"
+          onChange={handleChange}
+        />
+        <button
+          className="bg-red-500 font-bold text-semibold text-xl text-blue-700 h-10 w-20 flex items-center justify-center"
+          onClick={handleClick}
+        >
+          Enter
+        </button>
+        <Link to="/result">
+          <button
+            className="bg-red-500 font-bold text-semibold text-xl text-blue-700 h-10 w-20 flex items-center justify-center"
+            onClick={handleC}
+          >
+            Other
+          </button>
+        </Link>
       </div>
     </div>
   );
 }
 
-export default withUser(Last);
+export default Last;
