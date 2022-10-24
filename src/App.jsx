@@ -1,16 +1,20 @@
 import React from "react";
-import Other from "./Other";
+import AlertProvider from "../Providers/AlertProvider";
+import CartProvider from "../Providers/CartProvider";
+import UserProvider from "../Providers/UserProvider";
 import Last from "./Last";
-import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route index element={<Last />}></Route>
-        <Route path="/result" element={<Other />}></Route>
-      </Routes>
-    </div>
+    <>
+      <UserProvider>
+        <CartProvider>
+          <AlertProvider>
+            <Last />
+          </AlertProvider>
+        </CartProvider>
+      </UserProvider>
+    </>
   );
 }
 
