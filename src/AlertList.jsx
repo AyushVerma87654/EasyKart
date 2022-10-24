@@ -24,8 +24,6 @@ function AlertList({ alert }) {
   const [list, setList] = useState([]);
   const [id, setId] = useState(-1);
 
-  console.log(id);
-
   useEffect(() => {
     if (alert) {
       const newList = { [id + 1]: alert };
