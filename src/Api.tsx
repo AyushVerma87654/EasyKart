@@ -89,9 +89,3 @@ export const saveCart: Props5 = (cart) => {
     }
   );
 };
-export const all = async () => {
-  console.log("axios called");
-  return axios
-    .get("http://localhost:8888/products")
-    .then((res) => console.log(res));
-};

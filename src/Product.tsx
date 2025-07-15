@@ -1,5 +1,8 @@
 import React, { FC } from "react";
+import { connect, ConnectedProps } from "react-redux";
 import { Link } from "react-router-dom";
+import { AppState } from "./redux/store";
+import { getProductByIdInitiatedAction } from "./redux/slice/productSlice";
 
 type ProductProps = {
   thumbnail: string;
@@ -7,7 +10,7 @@ type ProductProps = {
   title: string;
   price: number;
   id: number;
-};
+} & ReduxProps;
 
 const Product: FC<ProductProps> = ({
   thumbnail,
@@ -15,6 +18,7 @@ const Product: FC<ProductProps> = ({
   title,
   price,
   id,
+  getProductById,
 }) => {
   return (
     <div className="max-w-xs">
@@ -29,7 +33,11 @@ const Product: FC<ProductProps> = ({
           <h1 className="font-bold text-sm"> Rs. {price}</h1>
         </div>
         <div className="pt-4 shrink-0">
-          <Link className="bg-blue-500 text-lg p-2" to={"/product/" + id}>
+          <Link
+            className="bg-blue-500 text-lg p-2"
+            to={"/product/" + id}
+            onClick={() => getProductById(id)}
+          >
             View Detail
           </Link>
         </div>
@@ -38,4 +46,14 @@ const Product: FC<ProductProps> = ({
   );
 };
 
-export default Product;
+const mapStateToProps = (state: AppState) => ({});
+
+const mapDispatchToProps = {
+  getProductById: getProductByIdInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(Product);

@@ -8,9 +8,9 @@ import { cartType } from "./models";
 type CartPageProps = { cart: cartType[] };
 
 const CartPage: FC<CartPageProps> = ({ cart }) => {
-  if (cart.length == 0) {
-    return <CartEmpty />;
-  }
+  // if (cart.length == 0) {
+  //   return <CartEmpty />;
+  // }
   return (
     <div className="my-14 mx-auto max-w-5xl">
       <CartList />

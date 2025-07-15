@@ -7,63 +7,38 @@ import CartButton from "./CartButton";
 import axios from "axios";
 import { withAlert, withUser } from "./ContextHoc";
 import { fnType, setAlertType, setUserType } from "./models";
+import { SignUpPayload } from "./models/user";
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { signupInitiatedAction } from "./redux/slice/userSlice";
 
-type signupValuesType = {
-  fullname: string;
-  email: string;
-  password: string;
-};
-
-function loginApi(
-  values: signupValuesType,
-  bag: { props: { setUser: setUserType; setAlert: setAlertType } }
-) {
-  axios
-    .post("https://myeasykart.codeyogi.io/signup", {
-      fullName: values.fullname,
-      email: values.email,
-      password: values.password,
-    })
-    .then((response) => {
-      const { user, token } = response.data;
-      localStorage.setItem("Token", token);
-      bag.props.setUser(user);
-      bag.props.setAlert({
-        type: "success",
-        message: "SignUp Completed Successfully",
-      });
-    })
-    .catch(() => {
-      bag.props.setAlert({ type: "error", message: "Invalid Credentials" });
-    });
-}
 const schema = Yup.object().shape({
-  fullname: Yup.string().required(),
+  fullName: Yup.string().required(),
   email: Yup.string().email().required(),
-  // username: Yup.string().required(),
-  password: Yup.string().min(8).max(15).required(),
+  userName: Yup.string().required(),
+  password: Yup.string().min(4).max(15).required(),
   // confirmpassword: Yup.string().min(8).max(15).required(),
 });
 
 const initialValues = {
-  fullname: "",
+  fullName: "",
   email: "",
-  // username: "",
+  userName: "",
   password: "",
   // confirmpassword: "",
 };
 
-type SignUpPageProps = {
+interface SignUpPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
   handleChange: fnType;
   resetForm: fnType;
   handleBlur: fnType;
-  values: signupValuesType;
-  touched: signupValuesType;
-  errors: signupValuesType;
+  values: SignUpPayload;
+  touched: SignUpPayload;
+  errors: SignUpPayload;
   isValid: boolean;
   user: {};
-};
+}
 
 const SignUpPage: FC<SignUpPageProps> = ({
   handleChange,
@@ -84,15 +59,15 @@ const SignUpPage: FC<SignUpPageProps> = ({
       >
         <Input
           label="Full Name"
-          name="fullname"
+          name="fullName"
           type="text"
-          id="fullname"
+          id="fullName"
           autoComplete="text"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values.fullname}
-          touched={touched.fullname}
-          errors={errors.fullname}
+          value={values.fullName}
+          touched={touched.fullName}
+          errors={errors.fullName}
         />
         <Input
           label="Email"
@@ -106,18 +81,18 @@ const SignUpPage: FC<SignUpPageProps> = ({
           touched={touched.email}
           errors={errors.email}
         />
-        {/* <Input
+        <Input
           label="Username"
-          name="username"
+          name="userName"
           type="text"
-          id="username"
+          id="userName"
           autoComplete="text"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values.username}
-          touched={touched.username}
-          errors={errors.username}
-        /> */}
+          value={values.userName}
+          touched={touched.userName}
+          errors={errors.userName}
+        />
         <Input
           label="Password"
           name="password"
@@ -166,13 +141,25 @@ const SignUpPage: FC<SignUpPageProps> = ({
   );
 };
 
-const myHoc = withFormik({
+const myHoc = withFormik<SignUpPageProps, SignUpPayload>({
   mapPropsToValues: () => {
     return initialValues;
   },
-  handleSubmit: loginApi,
+  handleSubmit: (values, { props }) => {
+    props.signupUser(values);
+  },
   validationSchema: schema,
   validateOnMount: true,
 })(SignUpPage);
 
-export default withUser(withAlert(myHoc));
+const mapStateToProps = (state: AppState) => ({});
+
+const mapDispatchToProps = {
+  signupUser: signupInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(myHoc);

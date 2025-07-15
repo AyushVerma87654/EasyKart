@@ -1,35 +1,15 @@
 import axios from "axios";
 import { withFormik } from "formik";
-import React, { FC, FormEventHandler } from "react";
+import { FC, FormEventHandler } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import { withAlert, withUser } from "./ContextHoc";
 import Input from "./Input";
 import { setAlertType, setUserType } from "./models";
-
-function callLoginApi(
-  values: loginValuesType,
-  bag: { props: { setUser: setUserType; setAlert: setAlertType } }
-) {
-  axios
-    .post("https://myeasykart.codeyogi.io/login", {
-      email: values.email,
-      password: values.password,
-    })
-    .then((response) => {
-      const { user, token } = response.data;
-      localStorage.setItem("Token", token);
-      bag.props.setUser(user);
-      bag.props.setAlert({
-        type: "success",
-        message: "Login Completed Successfully",
-      });
-    })
-    .catch(() => {
-      bag.props.setAlert({ type: "error", message: "Invalid Credentials" });
-    });
-}
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { LoginPayload } from "./models/user";
+import { loginInitiatedAction } from "./redux/slice/userSlice";
 
 const initialValues = {
   email: "",
@@ -38,20 +18,18 @@ const initialValues = {
 
 const schema = Yup.object().shape({
   email: Yup.string().email().required(),
-  password: Yup.string().min(8).max(20).required(),
+  password: Yup.string().min(4).max(20).required(),
 });
 
-type loginValuesType = { email: string; password: string };
-
-type LoginProps = {
+interface LoginProps extends ReduxProps {
   handleBlur: () => void;
   handleChange: () => void;
   handleSubmit: FormEventHandler<HTMLFormElement>;
-  touched: loginValuesType;
-  errors: loginValuesType;
-  values: loginValuesType;
+  touched: LoginPayload;
+  errors: LoginPayload;
+  values: LoginPayload;
   isValid: boolean;
-};
+}
 
 const Login: FC<LoginProps> = ({
   handleBlur,
@@ -126,11 +104,23 @@ const Login: FC<LoginProps> = ({
   );
 };
 
-const myHoc = withFormik({
+const myHoc = withFormik<LoginProps, LoginPayload>({
   mapPropsToValues: () => initialValues,
   validationSchema: schema,
-  handleSubmit: callLoginApi,
+  handleSubmit: (values: LoginPayload, { props }) => {
+    props.loginUser(values);
+  },
   validateOnMount: true,
 })(Login);
 
-export default withAlert(withUser(myHoc));
+const mapStateToProps = (state: AppState) => ({});
+
+const mapDispatchToProps = {
+  loginUser: loginInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(myHoc);

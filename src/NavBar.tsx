@@ -5,31 +5,32 @@ import MobileMenu from "./MobileMenu";
 import LaptopMenu from "./LaptopMenu";
 import { CgShoppingCart } from "react-icons/cg";
 import { withCart } from "./ContextHoc";
-import { all } from "./Api";
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { totalItemsSelector } from "./redux/selectors/productSelector";
 
-type NavBarProps = { totalCount: number };
+interface NavBarProps extends ReduxProps {}
 
-const NavBar: FC<NavBarProps> = ({ totalCount }) => {
+const NavBar: FC<NavBarProps> = ({ totalItems }) => {
   const [show, setShow] = useState(false);
 
   const handleOpener = () => setShow(!show);
-  const data = all();
 
   return (
     <div className="px-8 sm:px-12 md:px-16 lg:px-20 h-32 w-full text-orange-500 bg-white">
       <div className="sm:hidden flex items-center justify-between h-full">
-        <div>
+        <Link to="/" className="cursor-pointer">
           <img
             className="w-[120px] h-9"
             src="https://easykartindia.com/img/logo1.png"
           />
-        </div>
+        </Link>
 
         <div className="flex items-center gap-6">
           <Link to="/cart">
             <div className="flex flex-col pb-10 mr-3 items-center">
               <CgShoppingCart className="text-4xl" />
-              <p className="-m-7 text-xs pl-1 font-bold">{totalCount}</p>
+              <p className="-m-7 text-xs pl-1 font-bold">{totalItems}</p>
             </div>
           </Link>
           <div className="flex">
@@ -43,19 +44,29 @@ const NavBar: FC<NavBarProps> = ({ totalCount }) => {
       </div>
 
       <div className="invisible sm:visible flex items-center h-28 justify-between">
-        <div>
+        <Link to="/" className="cursor-pointer">
           <img
             className="w-[120px] h-9"
             src="https://easykartindia.com/img/logo1.png"
           />
-        </div>
+        </Link>
 
         <div className="p-1 mb-2">
-          <LaptopMenu data={totalCount} />
+          <LaptopMenu data={totalItems} />
         </div>
       </div>
     </div>
   );
 };
 
-export default withCart(NavBar);
+const mapStateToProps = (state: AppState) => ({
+  totalItems: totalItemsSelector(state),
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(NavBar);

@@ -1,5 +1,5 @@
 import { range } from "lodash";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { getProductList } from "./Api";
@@ -8,11 +8,21 @@ import { productObjectType } from "./models";
 import NoMatching from "./NoMatching";
 import PageButton from "./PageButton";
 import ProductDetail from "./ProductDetail";
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { getAllProductsInitiatedAction } from "./redux/slice/productSlice";
+import {
+  productLoadingSelector,
+  productMapSelector,
+} from "./redux/selectors/productSelector";
 
-function ProductList() {
-  const [product, setProduct] = useState<productObjectType>();
-  const [loading, setLoading] = useState(true);
+interface ProductListProps extends ReduxProps {}
 
+const ProductList: FC<ProductListProps> = ({
+  getAllProducts,
+  productLoading,
+  products,
+}) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const params = Object.fromEntries([...searchParams]);
@@ -34,10 +44,7 @@ function ProductList() {
       sortBy = "price";
       sortType = "desc";
     }
-    getProductList(sortBy, sortType, query, pageNumber).then((products) => {
-      setLoading(false);
-      setProduct(products);
-    });
+    getAllProducts();
   }, [sort, query, pageNumber]);
 
   let handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +61,13 @@ function ProductList() {
     );
   }
 
-  console.log("product", product);
-  if (loading) {
+  if (productLoading) {
     return <Loading />;
   }
 
   return (
     <div className="flex flex-col w-full">
-      {product?.data && (
+      {products && (
         <div>
           <div className="flex justify-end mt-2">
             <input
@@ -81,22 +87,21 @@ function ProductList() {
               <option value="hightolow">Sort by price high to low</option>
             </select>
           </div>
-          {product.data.length > 0 && <ProductDetail products={product.data} />}
-          {product.data.length == 0 ? (
+          {<ProductDetail products={products} />}
+          {products.length == 0 ? (
             <NoMatching />
           ) : (
             <div className="flex m-2 items-center">
-              {product.meta.first_page == pageNumber || (
-                <Link
-                  to={"?page=" + (pageNumber - 1)}
-                  className="flex items-center"
-                >
-                  <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
-                  Previous
-                </Link>
-              )}
+              <Link
+                to={"?page=" + (pageNumber - 1)}
+                className="flex items-center"
+              >
+                <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
+                Previous
+              </Link>
+
               <div className="flex mt-3 mx-auto">
-                {range(1, product.meta.last_page + 1).map((item) => {
+                {range(1, products.length / 20 + 1).map((item) => {
                   return (
                     <PageButton
                       key={item}
@@ -116,21 +121,33 @@ function ProductList() {
                   );
                 })}
               </div>
-              {product.meta.last_page == pageNumber || (
-                <Link
-                  to={"?page=" + (pageNumber + 1)}
-                  className="flex items-center"
-                >
-                  Next
-                  <HiArrowCircleRight className="text-5xl ml-5 px-1" />
-                </Link>
-              )}
+
+              <Link
+                to={"?page=" + (pageNumber + 1)}
+                className="flex items-center"
+              >
+                Next
+                <HiArrowCircleRight className="text-5xl ml-5 px-1" />
+              </Link>
             </div>
           )}
         </div>
       )}
     </div>
   );
-}
+};
 
-export default ProductList;
+const mapStateToProps = (state: AppState) => ({
+  productLoading: productLoadingSelector(state),
+  products: productMapSelector(state),
+});
+
+const mapDispatchToProps = {
+  getAllProducts: getAllProductsInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(ProductList);
