@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from "react";
-// import { getCart, getProductById, saveCart } from "../src/Api";
+import { getCart, getProductById, saveCart } from "../src/Api";
 import { CartContext } from "../src/Context";
 import { withUser } from "../src/ContextHoc";
 import Loading from "../src/Loading";
@@ -28,24 +28,24 @@ const CartProvider: FC<CartProviderProps> = ({ isLoggedIn, children }) => {
     return newQuantityMap;
   };
 
-  // useEffect(function () {
-  //   if (isLoggedIn) {
-  //     setLoading(true);
-  //     getCart().then((data) => {
-  //       setCart(data);
-  //       setLoading(false);
-  //     });
-  //   } else {
-  //     setLoading(true);
-  //     const savedData = localStorage.getItem("Cart") || "{}";
-  //     const savedCart: mapType = JSON.parse(savedData);
-  //     const id = Object.keys(savedCart);
-  //     getProductById(id).then((data) => {
-  //       toCart(data, savedCart);
-  //       setLoading(false);
-  //     });
-  //   }
-  // }, []);
+  useEffect(function () {
+    if (isLoggedIn) {
+      setLoading(true);
+      getCart().then((data) => {
+        setCart(data);
+        setLoading(false);
+      });
+    } else {
+      setLoading(true);
+      const savedData = localStorage.getItem("Cart") || "{}";
+      const savedCart: mapType = JSON.parse(savedData);
+      const id = Object.keys(savedCart);
+      getProductById(id).then((data) => {
+        toCart(data, savedCart);
+        setLoading(false);
+      });
+    }
+  }, []);
 
   let onAddToCart = (productId: number, count: number) => {
     const cartObject = toMap(cart);
@@ -58,7 +58,7 @@ const CartProvider: FC<CartProviderProps> = ({ isLoggedIn, children }) => {
 
   let updateCart = (newQuantityMap: mapType) => {
     if (isLoggedIn) {
-      // saveCart(newQuantityMap);
+      saveCart(newQuantityMap);
     } else {
       const quantityMapString = JSON.stringify(newQuantityMap);
       localStorage.setItem("Cart", quantityMapString);
@@ -83,9 +83,9 @@ const CartProvider: FC<CartProviderProps> = ({ isLoggedIn, children }) => {
       .reduce((total, current) => total + current, 0);
   }, [cart]);
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <CartContext.Provider
