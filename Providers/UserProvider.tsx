@@ -39,9 +39,9 @@ const UserProvider: FC<UserProviderProps> = ({ children }) => {
     localStorage.removeItem("Token");
   };
 
-  if (loading) {
-    <Loading />;
-  }
+  // if (loading) {
+  //   <Loading />;
+  // }
 
   return (
     <UserContext.Provider

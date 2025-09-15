@@ -1,4 +1,4 @@
-import { Cart, EditCartItem } from "../models/cart";
+import { Cart, EditCartItemPayload } from "../models/cart";
 
 export const totalAmount = (cart: Cart) =>
   Object.values(cart).reduce((total, current) => total + current.amount, 0);
@@ -6,7 +6,7 @@ export const totalAmount = (cart: Cart) =>
 export const totalItems = (cart: Cart) =>
   Object.values(cart).reduce((total, current) => total + current.quantity, 0);
 
-export const editCart = (data: EditCartItem) => ({
+export const editCart = (data: EditCartItemPayload) => ({
   [data.id]: {
     productId: data.id,
     quantity: data.quantity,
