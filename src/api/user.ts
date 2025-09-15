@@ -1,5 +1,5 @@
 import { ResponsePayload } from "./../models/response";
-import axios from "axios";
+import instance from "./axios";
 import { AuthCompletedResponse } from "../models/user";
 
 export const signupUser = async (data: {
@@ -7,44 +7,44 @@ export const signupUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  axios.post("/api/signup", data).then((res) => res.data);
+  instance.post("/api/signup", data).then((res) => res.data);
 
 export const loginUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  axios.post("/api/login", data).then((res) => res.data);
+  instance.post("/api/login", data).then((res) => res.data);
 
 export const fetchMe = async (): Promise<
   ResponsePayload<AuthCompletedResponse>
-> => axios.get("/api/me", { withCredentials: true }).then((res) => res.data);
+> => instance.get("/me", { withCredentials: true }).then((res) => res.data);
 
 export const logout = async (): Promise<ResponsePayload<{ message: string }>> =>
-  axios.get("/api/logout").then((res) => res.data);
+  instance.get("/logout").then((res) => res.data);
 
 export const deleteAccount = async (data: {
   email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  axios
-    .post("/api/deleteAccount", data, { withCredentials: true })
+  instance
+    .post("/deleteAccount", data, { withCredentials: true })
     .then((res) => res.data);
 
 export const sendMail = async (data: {
   email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  axios.post("/api/sendMail", data).then((res) => res.data);
+  instance.post("/sendMail", data).then((res) => res.data);
 
 export const codeVerification = async (data: {
   verificationCode: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  axios.post("/api/codeVerification", data).then((res) => res.data);
+  instance.post("/codeVerification", data).then((res) => res.data);
 
 export const resetPassword = async (data: {
   password: string;
   email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  axios
-    .post("/api/resetPassword", data, {
+  instance
+    .post("/resetPassword", data, {
       withCredentials: true,
     })
     .then((res) => res.data);
@@ -52,6 +52,6 @@ export const resetPassword = async (data: {
 export const dataUpdate = async (): Promise<
   ResponsePayload<{ message: string }>
 > =>
-  axios
-    .get("/api/updateData", { withCredentials: true })
+  instance
+    .get("/updateData", { withCredentials: true })
     .then((res) => res.data);
