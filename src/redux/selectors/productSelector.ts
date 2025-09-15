@@ -1,5 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { AppState } from "../store";
+import { normalizeQuery } from "../../utility/utils";
 
 export const productStateSelector = (state: AppState) => state.product;
 
@@ -8,13 +9,33 @@ export const productsSelector = createSelector(
   (state) => state.products
 );
 
-export const productMapSelector = createSelector([productsSelector], (state) =>
-  Object.values(state)
-);
-
 export const productByIdSelector = createSelector(
   [productStateSelector],
   (state) => state.products[state.selectedId]
+);
+
+export const paginationDataSelector = createSelector(
+  [productStateSelector],
+  (state) => state.paginationData
+);
+
+export const metaDataSelector = createSelector(
+  [productStateSelector],
+  (state) => state.metaData
+);
+
+export const productEntitesSelector = createSelector(
+  [productStateSelector],
+  (state) => state.entities
+);
+
+export const productMapSelector = createSelector(
+  [productsSelector, productEntitesSelector, paginationDataSelector],
+  (products, entities, paginationData) =>
+    (
+      entities?.[normalizeQuery(paginationData.query)]?.[paginationData.page] ??
+      []
+    ).map((item) => products[item])
 );
 
 export const productLoadingSelector = createSelector(
@@ -35,39 +56,4 @@ export const individualProductSelector = createSelector(
 export const inputQuantitySelector = createSelector(
   [productStateSelector],
   (state) => state.inputQuantity
-);
-
-export const cartSelector = createSelector([productStateSelector], (state) =>
-  Object.keys(state.cart).map((id) => ({
-    id: state.products[+id].id,
-    title: state.products[+id].title,
-    price: state.products[+id].price,
-    thumbnail: state.products[+id].thumbnail,
-    quantity: state.cart[+id],
-  }))
-);
-
-export const totalAmountSelector = createSelector(
-  [productStateSelector],
-  (state) => state.totalAmount
-);
-
-export const finalAmountSelector = createSelector(
-  [productStateSelector],
-  (state) => (state.totalAmount * (100 - state.couponDiscountPercentage)) / 100
-);
-
-export const couponDiscountSelector = createSelector(
-  [productStateSelector],
-  (state) => (state.totalAmount * state.couponDiscountPercentage) / 100
-);
-
-export const totalItemsSelector = createSelector(
-  [productStateSelector],
-  (state) => state.totalItems
-);
-
-export const couponCodeSelector = createSelector(
-  [productStateSelector],
-  (state) => state.couponCode
 );

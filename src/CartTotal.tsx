@@ -6,7 +6,7 @@ import {
   couponDiscountSelector,
   finalAmountSelector,
   totalAmountSelector,
-} from "./redux/selectors/productSelector";
+} from "./redux/selectors/cartSelector";
 
 interface CartTotalProps extends ReduxProps {}
 

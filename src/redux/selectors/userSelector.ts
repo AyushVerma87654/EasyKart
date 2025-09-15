@@ -17,3 +17,18 @@ export const userLoadingSelector = createSelector(
   [userStateSelector],
   (state) => state.loading
 );
+
+export const isLoggedInSelector = createSelector(
+  [userStateSelector],
+  (state) => state.isLoggedIn
+);
+
+export const verificationEmailSelector = createSelector(
+  [userStateSelector],
+  (state) => state.verificationEmail
+);
+
+export const codeVerificationStatusSelector = createSelector(
+  [userStateSelector],
+  (state) => state.codeVerificationStatus
+);

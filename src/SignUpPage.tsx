@@ -17,7 +17,11 @@ const schema = Yup.object().shape({
   email: Yup.string().email().required(),
   userName: Yup.string().required(),
   password: Yup.string().min(4).max(15).required(),
-  // confirmpassword: Yup.string().min(8).max(15).required(),
+  confirmPassword: Yup.string()
+    .min(4)
+    .max(15)
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required(),
 });
 
 const initialValues = {
@@ -25,7 +29,7 @@ const initialValues = {
   email: "",
   userName: "",
   password: "",
-  // confirmpassword: "",
+  confirmPassword: "",
 };
 
 interface SignUpPageProps extends ReduxProps {
@@ -61,7 +65,7 @@ const SignUpPage: FC<SignUpPageProps> = ({
           label="Full Name"
           name="fullName"
           type="text"
-          id="fullName"
+          id="fullname"
           autoComplete="text"
           onChange={handleChange}
           onBlur={handleBlur}
@@ -85,7 +89,7 @@ const SignUpPage: FC<SignUpPageProps> = ({
           label="Username"
           name="userName"
           type="text"
-          id="userName"
+          id="username"
           autoComplete="text"
           onChange={handleChange}
           onBlur={handleBlur}
@@ -105,18 +109,18 @@ const SignUpPage: FC<SignUpPageProps> = ({
           touched={touched.password}
           errors={errors.password}
         />
-        {/* <Input
+        <Input
           label="Confirm Password"
-          name="confirmpassword"
+          name="confirmPassword"
           type="password"
           id="confirmpassword"
           autoComplete="text"
           onChange={handleChange}
           onBlur={handleBlur}
-          value={values.confirmpassword}
-          touched={touched.confirmpassword}
-          errors={errors.confirmpassword}
-        /> */}
+          value={values.confirmPassword}
+          touched={touched.confirmPassword}
+          errors={errors.confirmPassword}
+        />
         <div className="flex items-center">
           <div className="flex flex-col space-y-2 w-32">
             <div className="my-2 h-10">

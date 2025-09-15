@@ -3,26 +3,29 @@ import CartButton from "./CartButton";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import {
+  cartMapSelector,
   cartSelector,
   couponCodeSelector,
-} from "./redux/selectors/productSelector";
+} from "./redux/selectors/cartSelector";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import {
   changeCouponCodeAction,
   getDiscountPercentageInitiatedAction,
   onDeleteFromCartAction,
   onQuantityChangeFromCartAction,
-} from "./redux/slice/productSlice";
+} from "./redux/slice/cartSlice";
+import { userSelector } from "./redux/selectors/userSelector";
 
 interface CartListProps extends ReduxProps {}
 
 const CartList: FC<CartListProps> = ({
-  cart,
+  cartMap,
   onQuantityChangeFromCart,
   onDeleteFromCart,
   getDiscountPercentage,
   couponCode,
   changeCouponCode,
+  user,
 }) => {
   return (
     <div className="sm:p-10 w-full">
@@ -38,8 +41,8 @@ const CartList: FC<CartListProps> = ({
           <p className="w-16 p-0.5">Subtotal</p>
         </div>
       </div>
-      {cart.map((item) => (
-        <div>
+      {cartMap.map((item) => (
+        <div key={item.id}>
           <div className="h-full w-full">
             <div className="w-full text-gray-700 font-semibold flex flex-col sm:flex-row sm:border border-gray-300 sm:items-center sm:space-x-5 sm:pl-7 sm:pr-10 sm:py-2 sm:h-auto">
               <div className="flex justify-end h-12 px-2 py-3 border border-gray-300 sm:border-white">
@@ -75,6 +78,8 @@ const CartList: FC<CartListProps> = ({
                       onQuantityChangeFromCart({
                         id: item.id,
                         quantity: +event.target.value,
+                        price: item.price,
+                        email: user.email,
                       })
                     }
                   />
@@ -109,8 +114,9 @@ const CartList: FC<CartListProps> = ({
 };
 
 const mapStateToProps = (state: AppState) => ({
-  cart: cartSelector(state),
+  cartMap: cartMapSelector(state),
   couponCode: couponCodeSelector(state),
+  user: userSelector(state),
 });
 
 const mapDispatchToProps = {

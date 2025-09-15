@@ -1,17 +1,29 @@
-import React, { FC } from "react";
-import { useContext } from "react";
+import { FC } from "react";
 import { Navigate } from "react-router-dom";
-import { UserContext } from "./Context";
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { isLoggedInSelector } from "./redux/selectors/userSelector";
 
-type NewUserProps = { children: JSX.Element };
+interface NewUserProps extends ReduxProps {
+  children: JSX.Element;
+}
 
-const NewUser: FC<NewUserProps> = ({ children }) => {
-  const { user } = useContext(UserContext);
-  if (!user) {
+const NewUser: FC<NewUserProps> = ({ isLoggedIn, children }) => {
+  if (!isLoggedIn) {
     return <Navigate to="/login" />;
   }
 
   return children;
 };
 
-export default NewUser;
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: isLoggedInSelector(state),
+});
+
+const mapDispatchToProps = {};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(NewUser);

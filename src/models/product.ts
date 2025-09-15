@@ -31,7 +31,29 @@ export type Product = {
 export type Products = { [id: number]: Product };
 export type ProductMap = Product[];
 
-export type Cart = { [id: number]: number };
-
-export type ProductMapResponse = { products: ProductMap };
+export type ProductMapResponse = {
+  products: ProductMap;
+  metaData: MetaData;
+};
 export type ProductResponse = { product: Product };
+
+export type MetaData = {
+  currentPage: number;
+  firstPage: number;
+  firstPageUrl: string | null;
+  lastPage: number;
+  lastPageUrl: string | null;
+  nextPageUrl: string | null;
+  perPage: number;
+  previousPageUrl: string | null;
+  total: number;
+};
+
+export type PaginationData = {
+  page: number;
+  query: string;
+  sortBy: string;
+  sortType: string;
+};
+
+export type ProductEntites = Record<string, Record<number, number[]>>;

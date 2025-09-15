@@ -10,11 +10,25 @@ export type SignUpPayload = {
   userName: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 export type LoginPayload = {
   email: string;
   password: string;
+};
+
+export type ForgetPasswordPayload = {
+  email: string;
+};
+
+export type CodeVerificationPayload = {
+  verificationCode: string;
+};
+
+export type ResetPasswordPayload = {
+  password: string;
+  email: string;
 };
 
 export type AuthCompletedResponse = {

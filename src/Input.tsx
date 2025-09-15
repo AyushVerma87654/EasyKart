@@ -1,9 +1,9 @@
 import React, { FC, InputHTMLAttributes } from "react";
 
 type InputProps = {
-  label: string;
-  touched: string;
-  errors: string;
+  label?: string;
+  touched?: string;
+  errors?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const Input: FC<InputProps> = ({

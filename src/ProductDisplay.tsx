@@ -14,8 +14,9 @@ import {
 import {
   changeInputQuantityAction,
   getProductByIdInitiatedAction,
-  onAddToCartAction,
 } from "./redux/slice/productSlice";
+import { onAddToCartInitiatedAction } from "./redux/slice/cartSlice";
+import { userSelector } from "./redux/selectors/userSelector";
 
 interface ProductDisplayProps extends ReduxProps {}
 
@@ -27,6 +28,7 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
   inputQuantity,
   changeInputQuantity,
   onAddToCart,
+  user,
 }) => {
   const params = useParams();
   const newId = params.id !== undefined ? +params.id : 0;
@@ -41,7 +43,12 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
   }
 
   function handleButtonClick() {
-    onAddToCart({ id: selectedId, quantity: inputQuantity });
+    onAddToCart({
+      id: selectedId,
+      quantity: inputQuantity,
+      price: individualProduct.price,
+      email: user.email,
+    });
   }
 
   if (productLoading && !individualProduct) {
@@ -139,12 +146,13 @@ const mapStateToProps = (state: AppState) => ({
   individualProduct: individualProductSelector(state),
   selectedId: selectedIdSelector(state),
   inputQuantity: inputQuantitySelector(state),
+  user: userSelector(state),
 });
 
 const mapDispatchToProps = {
   getProductById: getProductByIdInitiatedAction,
   changeInputQuantity: changeInputQuantityAction,
-  onAddToCart: onAddToCartAction,
+  onAddToCart: onAddToCartInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

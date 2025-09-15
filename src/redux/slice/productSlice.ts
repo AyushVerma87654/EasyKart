@@ -1,38 +1,49 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  Product,
-  Cart,
   Products,
-  ProductMap,
   ProductMapResponse,
   ProductResponse,
+  ProductEntites,
+  PaginationData,
+  MetaData,
 } from "../../models/product";
-import { totalAmount, totalItems } from "../../utility/product";
+import { normalizeQuery } from "../../utility/utils";
 
 export type ProductState = {
   products: Products;
+  paginationData: PaginationData;
+  metaData: MetaData;
+  entities: ProductEntites;
   loading: boolean;
-  error: string;
+  message: string;
   selectedId: number;
   inputQuantity: number;
-  cart: Cart;
-  totalItems: number;
-  totalAmount: number;
-  couponCode: string;
-  couponDiscountPercentage: number;
 };
 
 const initialState: ProductState = {
   products: [],
-  loading: false,
-  error: "",
+  paginationData: {
+    page: 1,
+    query: "",
+    sortBy: "",
+    sortType: "",
+  },
+  metaData: {
+    currentPage: 1,
+    firstPage: 1,
+    firstPageUrl: null,
+    lastPage: 1,
+    lastPageUrl: null,
+    nextPageUrl: null,
+    perPage: 15,
+    previousPageUrl: null,
+    total: 0,
+  },
+  entities: {},
+  loading: true,
+  message: "",
   selectedId: 0,
   inputQuantity: 1,
-  cart: {},
-  totalAmount: 0,
-  totalItems: 0,
-  couponCode: "",
-  couponDiscountPercentage: 0,
 };
 
 const productSlice = createSlice({
@@ -41,17 +52,10 @@ const productSlice = createSlice({
   reducers: {
     getAllProductsInitiated,
     getAllProductsCompleted,
-    errorWhileFetchingProducts,
+    messageWhileFetchingProducts,
     getProductByIdInitiated,
     getProductByIdCompleted,
     changeInputQuantity,
-    onAddToCart,
-    onQuantityChangeFromCart,
-    onDeleteFromCart,
-    changeCouponCode,
-    getDiscountPercentageInitiated,
-    getDiscountPercentageCompleted,
-    getDiscountPercentageError,
   },
 });
 
@@ -60,23 +64,25 @@ const { actions, reducer: productReducer } = productSlice;
 export const {
   getAllProductsInitiated: getAllProductsInitiatedAction,
   getAllProductsCompleted: getAllProductsCompletedAction,
-  errorWhileFetchingProducts: errorWhileFetchingProductsAction,
+  messageWhileFetchingProducts: messageWhileFetchingProductsAction,
   getProductByIdInitiated: getProductByIdInitiatedAction,
   getProductByIdCompleted: getProductByIdCompletedAction,
   changeInputQuantity: changeInputQuantityAction,
-  onAddToCart: onAddToCartAction,
-  onQuantityChangeFromCart: onQuantityChangeFromCartAction,
-  onDeleteFromCart: onDeleteFromCartAction,
-  changeCouponCode: changeCouponCodeAction,
-  getDiscountPercentageInitiated: getDiscountPercentageInitiatedAction,
-  getDiscountPercentageCompleted: getDiscountPercentageCompletedAction,
-  getDiscountPercentageError: getDiscountPercentageErrorAction,
 } = actions;
 
 export default productReducer;
 
-function getAllProductsInitiated(state: ProductState) {
+function getAllProductsInitiated(
+  state: ProductState,
+  action: PayloadAction<PaginationData>
+) {
   state.loading = true;
+  state.paginationData = {
+    query: action.payload.query,
+    sortBy: action.payload.sortBy,
+    sortType: action.payload.sortType,
+    page: action.payload.page,
+  };
 }
 
 function getAllProductsCompleted(
@@ -85,18 +91,29 @@ function getAllProductsCompleted(
 ) {
   state.loading = false;
   let data = {};
+  let ids: number[] = [];
+  const normalizedQuery = normalizeQuery(state.paginationData.query);
   action.payload.products.map((product) => {
     data = { ...data, [product.id]: product };
+    ids = [...ids, product.id];
   });
-  state.products = data;
+  state.products = { ...state.products, ...data };
+  (state.metaData = action.payload.metaData),
+    (state.entities = {
+      ...state.entities,
+      [normalizedQuery]: {
+        ...state.entities[normalizedQuery],
+        [state.paginationData.page]: ids,
+      },
+    });
 }
 
-function errorWhileFetchingProducts(
+function messageWhileFetchingProducts(
   state: ProductState,
   action: PayloadAction<string>
 ) {
   state.loading = false;
-  state.error = action.payload;
+  state.message = action.payload;
 }
 
 function getProductByIdInitiated(
@@ -122,62 +139,4 @@ function changeInputQuantity(
   action: PayloadAction<number>
 ) {
   state.inputQuantity = action.payload;
-}
-
-function onAddToCart(
-  state: ProductState,
-  action: PayloadAction<{ id: number; quantity: number }>
-) {
-  state.cart = {
-    ...state.cart,
-    [action.payload.id]: action.payload.quantity,
-  };
-  state.totalAmount = totalAmount(state.cart, state.products);
-  state.totalItems = totalItems(state.cart);
-}
-
-function onQuantityChangeFromCart(
-  state: ProductState,
-  action: PayloadAction<{ id: number; quantity: number }>
-) {
-  state.cart = { ...state.cart, [action.payload.id]: action.payload.quantity };
-  state.totalAmount = totalAmount(state.cart, state.products);
-  state.totalItems = totalItems(state.cart);
-}
-
-function onDeleteFromCart(
-  state: ProductState,
-  action: PayloadAction<{ id: number }>
-) {
-  delete state.cart[action.payload.id];
-  state.totalAmount = totalAmount(state.cart, state.products);
-  state.totalItems = totalItems(state.cart);
-}
-
-function changeCouponCode(state: ProductState, action: PayloadAction<string>) {
-  state.couponCode = action.payload;
-}
-
-function getDiscountPercentageInitiated(
-  state: ProductState,
-  action: PayloadAction<string>
-) {
-  state.loading = true;
-  state.couponCode = action.payload;
-}
-
-function getDiscountPercentageCompleted(
-  state: ProductState,
-  action: PayloadAction<{ discountPercentage: number }>
-) {
-  state.loading = false;
-  state.couponDiscountPercentage = action.payload.discountPercentage;
-}
-
-function getDiscountPercentageError(
-  state: ProductState,
-  action: PayloadAction<{ error: string }>
-) {
-  state.loading = false;
-  state.error = action.payload.error;
 }

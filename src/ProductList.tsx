@@ -1,10 +1,8 @@
 import { range } from "lodash";
-import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { HiArrowCircleLeft, HiArrowCircleRight } from "react-icons/hi";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import { getProductList } from "./Api";
+import { Link, useSearchParams } from "react-router-dom";
 import Loading from "./Loading";
-import { productObjectType } from "./models";
 import NoMatching from "./NoMatching";
 import PageButton from "./PageButton";
 import ProductDetail from "./ProductDetail";
@@ -12,9 +10,13 @@ import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { getAllProductsInitiatedAction } from "./redux/slice/productSlice";
 import {
+  metaDataSelector,
+  paginationDataSelector,
   productLoadingSelector,
   productMapSelector,
 } from "./redux/selectors/productSelector";
+import { fetchMeInitiatedAction } from "./redux/slice/userSlice";
+import { isLoggedInSelector } from "./redux/selectors/userSelector";
 
 interface ProductListProps extends ReduxProps {}
 
@@ -22,6 +24,10 @@ const ProductList: FC<ProductListProps> = ({
   getAllProducts,
   productLoading,
   products,
+  fetchProfile,
+  isLoggedIn,
+  paginationData,
+  metaData,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -29,13 +35,17 @@ const ProductList: FC<ProductListProps> = ({
 
   let { page, query, sort } = params;
 
-  const pageNumber = +page || 1;
   query = query || "";
   sort = sort || "default";
+  let timer: NodeJS.Timeout;
 
   useEffect(() => {
-    let sortBy = "",
-      sortType = "";
+    !isLoggedIn && fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    let sortBy = "id",
+      sortType = "asc";
     if (sort == "title") {
       sortBy = "title";
     } else if (sort == "lowtohigh") {
@@ -44,8 +54,25 @@ const ProductList: FC<ProductListProps> = ({
       sortBy = "price";
       sortType = "desc";
     }
-    getAllProducts();
-  }, [sort, query, pageNumber]);
+    if (query === paginationData.query) {
+      getAllProducts({
+        page: +page || 1,
+        query: query || "",
+        sortBy,
+        sortType,
+      });
+    } else {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        getAllProducts({
+          page: +page || 1,
+          query: query || "",
+          sortBy,
+          sortType,
+        });
+      }, 1000);
+    }
+  }, [sort, query, page]);
 
   let handleQueryChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchParams(
@@ -61,7 +88,9 @@ const ProductList: FC<ProductListProps> = ({
     );
   }
 
-  if (productLoading) {
+  console.log("products", paginationData.page, products, products.length);
+
+  if (productLoading && products.length === 0) {
     return <Loading />;
   }
 
@@ -71,6 +100,7 @@ const ProductList: FC<ProductListProps> = ({
         <div>
           <div className="flex justify-end mt-2">
             <input
+              value={query ?? ""}
               className="bg-gray-200 border border-gray-400 w-40 sm:48 h-9 p-1"
               placeholder="Search"
               onChange={handleQueryChange}
@@ -92,28 +122,38 @@ const ProductList: FC<ProductListProps> = ({
             <NoMatching />
           ) : (
             <div className="flex m-2 items-center">
-              <Link
-                to={"?page=" + (pageNumber - 1)}
-                className="flex items-center"
-              >
-                <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
-                Previous
-              </Link>
+              {metaData.previousPageUrl && (
+                <Link
+                  to={
+                    "?" +
+                    new URLSearchParams({
+                      ...params,
+                      page: JSON.stringify(paginationData.page - 1),
+                    })
+                  }
+                  className="flex items-center"
+                >
+                  <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
+                  Previous
+                </Link>
+              )}
 
               <div className="flex mt-3 mx-auto">
-                {range(1, products.length / 20 + 1).map((item) => {
+                {range(1, metaData.lastPage + 1).map((item) => {
                   return (
                     <PageButton
                       key={item}
                       to={
                         "?" +
-                        new URLSearchParams(
-                          { ...params, page: JSON.stringify(item) }
-                          // { replace: false }
-                        )
+                        new URLSearchParams({
+                          ...params,
+                          page: JSON.stringify(item),
+                        })
                       }
                       className={
-                        pageNumber === item ? "bg-red-500" : "bg-indigo-500"
+                        metaData.currentPage === item
+                          ? "bg-red-500"
+                          : "bg-indigo-500"
                       }
                     >
                       {item}
@@ -122,13 +162,21 @@ const ProductList: FC<ProductListProps> = ({
                 })}
               </div>
 
-              <Link
-                to={"?page=" + (pageNumber + 1)}
-                className="flex items-center"
-              >
-                Next
-                <HiArrowCircleRight className="text-5xl ml-5 px-1" />
-              </Link>
+              {metaData.nextPageUrl && (
+                <Link
+                  to={
+                    "?" +
+                    new URLSearchParams({
+                      ...params,
+                      page: JSON.stringify(paginationData.page + 1),
+                    })
+                  }
+                  className="flex items-center"
+                >
+                  Next
+                  <HiArrowCircleRight className="text-5xl ml-5 px-1" />
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -140,10 +188,14 @@ const ProductList: FC<ProductListProps> = ({
 const mapStateToProps = (state: AppState) => ({
   productLoading: productLoadingSelector(state),
   products: productMapSelector(state),
+  isLoggedIn: isLoggedInSelector(state),
+  paginationData: paginationDataSelector(state),
+  metaData: metaDataSelector(state),
 });
 
 const mapDispatchToProps = {
   getAllProducts: getAllProductsInitiatedAction,
+  fetchProfile: fetchMeInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

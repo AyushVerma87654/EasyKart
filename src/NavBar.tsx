@@ -7,7 +7,8 @@ import { CgShoppingCart } from "react-icons/cg";
 import { withCart } from "./ContextHoc";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
-import { totalItemsSelector } from "./redux/selectors/productSelector";
+import { totalItemsSelector } from "./redux/selectors/cartSelector";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 
 interface NavBarProps extends ReduxProps {}
 
@@ -34,10 +35,17 @@ const NavBar: FC<NavBarProps> = ({ totalItems }) => {
             </div>
           </Link>
           <div className="flex">
-            <CgMenuGridO
-              className="sm:hidden relative self-center text-3xl "
-              onClick={handleOpener}
-            />
+            {show ? (
+              <AiOutlineCloseCircle
+                onClick={handleOpener}
+                className="sm:hidden relative self-center text-3xl"
+              />
+            ) : (
+              <CgMenuGridO
+                className="sm:hidden relative self-center text-3xl"
+                onClick={handleOpener}
+              />
+            )}
             {show && <MobileMenu />}
           </div>
         </div>

@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
   password: Yup.string().min(4).max(20).required(),
 });
 
-interface LoginProps extends ReduxProps {
+interface LoginPageProps extends ReduxProps {
   handleBlur: () => void;
   handleChange: () => void;
   handleSubmit: FormEventHandler<HTMLFormElement>;
@@ -31,7 +31,7 @@ interface LoginProps extends ReduxProps {
   isValid: boolean;
 }
 
-const Login: FC<LoginProps> = ({
+const LoginPage: FC<LoginPageProps> = ({
   handleBlur,
   handleChange,
   handleSubmit,
@@ -104,14 +104,14 @@ const Login: FC<LoginProps> = ({
   );
 };
 
-const myHoc = withFormik<LoginProps, LoginPayload>({
+const myHoc = withFormik<LoginPageProps, LoginPayload>({
   mapPropsToValues: () => initialValues,
   validationSchema: schema,
   handleSubmit: (values: LoginPayload, { props }) => {
     props.loginUser(values);
   },
   validateOnMount: true,
-})(Login);
+})(LoginPage);
 
 const mapStateToProps = (state: AppState) => ({});
 

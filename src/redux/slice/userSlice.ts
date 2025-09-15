@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { LoginPayload, SignUpPayload, User } from "../../models/user";
+import { CodeVerification } from "../../utility/constant";
 
 export type UserState = {
   user: User;
   accessToken: string;
   loading: boolean;
-  error: string;
+  message: string;
+  isLoggedIn: boolean;
+  verificationEmail: string;
+  codeVerificationStatus: CodeVerification;
 };
 
 const initialState: UserState = {
@@ -17,7 +21,10 @@ const initialState: UserState = {
   },
   accessToken: "",
   loading: false,
-  error: "",
+  message: "",
+  isLoggedIn: false,
+  verificationEmail: "",
+  codeVerificationStatus: CodeVerification.NULL,
 };
 
 const userSlice = createSlice({
@@ -28,7 +35,25 @@ const userSlice = createSlice({
     authCompleted,
     authError,
     loginInitiated,
-    refreshAuth,
+    fetchMeInitiated,
+    logoutInitiated,
+    logoutCompleted,
+    logoutError,
+    accountDeletionInitiated,
+    accountDeletionCompleted,
+    accountDeletionError,
+    forgetPasswordInitiated,
+    verificationCodeSent,
+    codeVerificationInitiated,
+    codeVerificationCompleted,
+    codeVerificationError,
+    forgetPasswordError,
+    resetPasswordInitiated,
+    resetPasswordCompleted,
+    resetPasswordError,
+    updateDataInitiated,
+    updateDataCompleted,
+    updateDataError,
   },
 });
 
@@ -39,7 +64,25 @@ export const {
   authCompleted: authCompletedAction,
   authError: authErrorAction,
   loginInitiated: loginInitiatedAction,
-  refreshAuth: refreshAuthAction,
+  fetchMeInitiated: fetchMeInitiatedAction,
+  logoutInitiated: logoutInitiatedAction,
+  logoutCompleted: logoutCompletedAction,
+  logoutError: logoutErrorAction,
+  accountDeletionInitiated: accountDeletionInitiatedAction,
+  accountDeletionCompleted: accountDeletionCompletedAction,
+  accountDeletionError: accountDeletionErrorAction,
+  forgetPasswordInitiated: forgetPasswordInitiatedAction,
+  verificationCodeSent: verificationCodeSentAction,
+  codeVerificationInitiated: codeVerificationInitiatedAction,
+  codeVerificationCompleted: codeVerificationCompletedAction,
+  codeVerificationError: codeVerificationErrorAction,
+  forgetPasswordError: forgetPasswordErrorAction,
+  resetPasswordInitiated: resetPasswordInitiatedAction,
+  resetPasswordCompleted: resetPasswordCompletedAction,
+  resetPasswordError: resetPasswordErrorAction,
+  updateDataInitiated: updateDataInitiatedAction,
+  updateDataCompleted: updateDataCompletedAction,
+  updateDataError: updateDataErrorAction,
 } = actions;
 
 export default userReducer;
@@ -58,15 +101,136 @@ function authCompleted(
   state.loading = false;
   state.user = action.payload.user;
   state.accessToken = action.payload.accessToken;
+  state.isLoggedIn = true;
 }
 
 function authError(state: UserState, action: PayloadAction<{ error: string }>) {
   state.loading = false;
-  state.error = action.payload.error;
+  state.message = action.payload.error;
 }
 
 function loginInitiated(state: UserState, action: PayloadAction<LoginPayload>) {
   state.loading = true;
 }
 
-function refreshAuth(_state: UserState) {}
+function fetchMeInitiated(state: UserState) {
+  state.loading = true;
+}
+
+function logoutInitiated(state: UserState) {
+  return initialState;
+}
+
+function logoutCompleted(
+  state: UserState,
+  action: PayloadAction<{ message: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.message;
+}
+
+function logoutError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.error;
+}
+
+function accountDeletionInitiated(
+  state: UserState,
+  action: PayloadAction<{ email: string }>
+) {
+  return initialState;
+}
+
+function accountDeletionCompleted(
+  state: UserState,
+  action: PayloadAction<{ message: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.message;
+}
+
+function accountDeletionError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.error;
+}
+
+function forgetPasswordInitiated(
+  state: UserState,
+  action: PayloadAction<{ email: string }>
+) {
+  state.loading = true;
+  state.verificationEmail = action.payload.email;
+  state.codeVerificationStatus = CodeVerification.INITIATED;
+}
+
+function verificationCodeSent(state: UserState) {
+  state.loading = true;
+}
+
+function codeVerificationInitiated(
+  state: UserState,
+  _action: PayloadAction<{ email: string; verificationCode: string }>
+) {}
+
+function codeVerificationCompleted(state: UserState) {
+  state.codeVerificationStatus = CodeVerification.CODEVERIFIED;
+}
+
+function codeVerificationError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.error;
+  state.codeVerificationStatus = CodeVerification.FAILURE;
+}
+
+function forgetPasswordError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.error;
+}
+
+function resetPasswordInitiated(
+  state: UserState,
+  action: PayloadAction<{ password: string; email: string }>
+) {
+  state.loading = true;
+}
+
+function resetPasswordCompleted(state: UserState) {
+  state.codeVerificationStatus = CodeVerification.SUCCESS;
+}
+
+function resetPasswordError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.loading = false;
+  state.message = action.payload.error;
+  state.codeVerificationStatus = CodeVerification.FAILURE;
+}
+
+function updateDataInitiated() {}
+
+function updateDataCompleted(
+  state: UserState,
+  action: PayloadAction<{ message: string }>
+) {
+  state.message = action.payload.message;
+}
+
+function updateDataError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.message = action.payload.error;
+}

@@ -1,13 +1,16 @@
 import { withFormik } from "formik";
-import React, { FC, FormEventHandler } from "react";
+import { FC, FormEventHandler } from "react";
 import { Link, Navigate } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
 import { fnType } from "./models";
-
-const loginApi = (values: { email: string }) =>
-  console.log("Sending Data", values.email);
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { ForgetPasswordPayload } from "./models/user";
+import { forgetPasswordInitiatedAction } from "./redux/slice/userSlice";
+import { codeVerificationStatusSelector } from "./redux/selectors/userSelector";
+import { CodeVerification } from "./utility/constant";
 
 const schema = Yup.object().shape({
   email: Yup.string().email().required(),
@@ -17,18 +20,19 @@ const initialValue = {
   email: "",
 };
 
-type ForgetPasswordProps = {
+interface ForgetPasswordPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
   handleChange: fnType;
+  resetForm: fnType;
   handleBlur: fnType;
-  values: { email: string };
-  touched: { email: string };
-  errors: { email: string };
+  values: ForgetPasswordPayload;
+  touched: ForgetPasswordPayload;
+  errors: ForgetPasswordPayload;
   isValid: boolean;
   user: {};
-};
+}
 
-const ForgetPassword: FC<ForgetPasswordProps> = ({
+const ForgetPasswordPage: FC<ForgetPasswordPageProps> = ({
   handleSubmit,
   handleChange,
   handleBlur,
@@ -37,10 +41,11 @@ const ForgetPassword: FC<ForgetPasswordProps> = ({
   errors,
   isValid,
   user,
+  codeVerificationStatus,
 }) => {
-  if (user) {
-    return <Navigate to="/" />;
-  }
+  if (codeVerificationStatus === CodeVerification.INITIATED)
+    return <Navigate to="/code-verification" />;
+
   return (
     <div className="p-12 text-orange-500 w-full">
       <h1 className="my-4 mb-8 font-bold">
@@ -67,6 +72,7 @@ const ForgetPassword: FC<ForgetPasswordProps> = ({
         <div className="flex items-center my-4">
           <div className="w-40 h-12 mr-20">
             <CartButton type="submit" disabled={!isValid}>
+              {/* <Link to="/code-verification">Reset Password</Link> */}
               Reset Password
             </CartButton>
           </div>
@@ -77,13 +83,28 @@ const ForgetPassword: FC<ForgetPasswordProps> = ({
   );
 };
 
-const myHoc = withFormik({
-  handleSubmit: loginApi,
+const myHoc = withFormik<ForgetPasswordPageProps, ForgetPasswordPayload>({
+  handleSubmit: (values, { props }) => {
+    console.log("handlesubmit");
+    props.forgetPassword(values);
+  },
   validationSchema: schema,
   validateOnMount: true,
   mapPropsToValues: () => {
-    return { email: "" };
+    return initialValue;
   },
+})(ForgetPasswordPage);
+
+const mapStateToProps = (state: AppState) => ({
+  codeVerificationStatus: codeVerificationStatusSelector(state),
 });
 
-export default myHoc(ForgetPassword);
+const mapDispatchToProps = {
+  forgetPassword: forgetPasswordInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(myHoc);

@@ -1,16 +1,23 @@
 import CartList from "./CartList";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import CartTotal from "./CartTotal";
 import { withCart } from "./ContextHoc";
 import CartEmpty from "./CartEmpty";
 import { cartType } from "./models";
+import { connect, ConnectedProps } from "react-redux";
+import { AppState } from "./redux/store";
+import { totalItemsSelector } from "./redux/selectors/cartSelector";
+import { fetchCouponsInitiatedAction } from "./redux/slice/cartSlice";
 
-type CartPageProps = { cart: cartType[] };
+interface CartPageProps extends ReduxProps {}
 
-const CartPage: FC<CartPageProps> = ({ cart }) => {
-  // if (cart.length == 0) {
-  //   return <CartEmpty />;
-  // }
+const CartPage: FC<CartPageProps> = ({ totalItems, fetchCoupons }) => {
+  useEffect(() => {
+    fetchCoupons();
+  }, []);
+  if (totalItems == 0) {
+    return <CartEmpty />;
+  }
   return (
     <div className="my-14 mx-auto max-w-5xl">
       <CartList />
@@ -19,4 +26,16 @@ const CartPage: FC<CartPageProps> = ({ cart }) => {
   );
 };
 
-export default withCart(CartPage);
+const mapStateToProps = (state: AppState) => ({
+  totalItems: totalItemsSelector(state),
+});
+
+const mapDispatchToProps = {
+  fetchCoupons: fetchCouponsInitiatedAction,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ReduxProps = ConnectedProps<typeof connector>;
+
+export default connector(CartPage);
