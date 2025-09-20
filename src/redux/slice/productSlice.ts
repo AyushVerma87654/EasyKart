@@ -55,6 +55,7 @@ const productSlice = createSlice({
     messageWhileFetchingProducts,
     getProductByIdInitiated,
     getProductByIdCompleted,
+    getProductByIdsInitiated,
     changeInputQuantity,
   },
 });
@@ -67,6 +68,8 @@ export const {
   messageWhileFetchingProducts: messageWhileFetchingProductsAction,
   getProductByIdInitiated: getProductByIdInitiatedAction,
   getProductByIdCompleted: getProductByIdCompletedAction,
+  getProductByIdsInitiated: getProductByIdsInitiatedAction,
+  getAllProductsCompleted: getProductByIdsCompletedAction,
   changeInputQuantity: changeInputQuantityAction,
 } = actions;
 
@@ -83,6 +86,7 @@ function getAllProductsInitiated(
     sortType: action.payload.sortType,
     page: action.payload.page,
   };
+  state.metaData = { ...state.metaData, currentPage: action.payload.page };
 }
 
 function getAllProductsCompleted(
@@ -132,6 +136,13 @@ function getProductByIdCompleted(
   state.loading = false;
   const product = action.payload.product;
   state.products = { ...state.products, [product.id]: product };
+}
+
+function getProductByIdsInitiated(
+  state: ProductState,
+  _action: PayloadAction<number[]>
+) {
+  state.loading = true;
 }
 
 function changeInputQuantity(

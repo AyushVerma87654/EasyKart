@@ -51,6 +51,7 @@ export const {
   onAddToCartInitiated: onAddToCartInitiatedAction,
   onAddToCartCompleted: onAddToCartCompletedAction,
   onAddToCartError: onAddToCartErrorAction,
+  onAddToCartCompleted: cartLoadingCompletedAction,
   onQuantityChangeFromCart: onQuantityChangeFromCartAction,
   onDeleteFromCart: onDeleteFromCartAction,
   changeCouponCode: changeCouponCodeAction,
@@ -69,7 +70,14 @@ function onAddToCartInitiated(
   action: PayloadAction<EditCartItemPayload>
 ) {
   const newCartItem = editCart(action.payload);
-  state.cart = { ...state.cart, ...newCartItem };
+  state.cart = {
+    ...state.cart,
+    [action.payload.id]: {
+      ...newCartItem[action.payload.id],
+      quantity:
+        state.cart[action.payload.id]?.quantity + action.payload.quantity,
+    },
+  };
   state.totalAmount = totalAmount(state.cart);
   state.totalItems = totalItems(state.cart);
   state.loading = true;
@@ -79,9 +87,10 @@ function onAddToCartCompleted(
   state: CartState,
   action: PayloadAction<{ cart: Cart }>
 ) {
-  state.cart = { ...action.payload.cart };
-  state.totalAmount = totalAmount(action.payload.cart);
-  state.totalItems = totalItems(action.payload.cart);
+  const cart = action.payload.cart;
+  state.cart = { ...cart };
+  state.totalAmount = totalAmount(cart);
+  state.totalItems = totalItems(cart);
   state.loading = false;
 }
 

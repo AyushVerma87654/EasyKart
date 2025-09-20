@@ -7,13 +7,13 @@ export const signupUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  instance.post("/api/signup", data).then((res) => res.data);
+  instance.post("/signup", data).then((res) => res.data);
 
 export const loginUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  instance.post("/api/login", data).then((res) => res.data);
+  instance.post("/login", data).then((res) => res.data);
 
 export const fetchMe = async (): Promise<
   ResponsePayload<AuthCompletedResponse>

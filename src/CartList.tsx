@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import CartButton from "./CartButton";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
@@ -14,7 +14,11 @@ import {
   onDeleteFromCartAction,
   onQuantityChangeFromCartAction,
 } from "./redux/slice/cartSlice";
-import { userSelector } from "./redux/selectors/userSelector";
+import {
+  isLoggedInSelector,
+  userSelector,
+} from "./redux/selectors/userSelector";
+import { getProductByIdsInitiatedAction } from "./redux/slice/productSlice";
 
 interface CartListProps extends ReduxProps {}
 
@@ -26,9 +30,20 @@ const CartList: FC<CartListProps> = ({
   couponCode,
   changeCouponCode,
   user,
+  isLoggedIn,
+  getProductByIdsInitiated,
 }) => {
+  console.log("cartMap", cartMap);
+  useEffect(() => {
+    let arrayOfIds: number[] = [];
+    cartMap.forEach((product) => {
+      if (!product.price || !product.title || !product.thumbnail)
+        arrayOfIds.push(product.id);
+    });
+    if (arrayOfIds.length) getProductByIdsInitiated(arrayOfIds);
+  }, []);
   return (
-    <div className="sm:p-10 w-full">
+    <div key={343} className="sm:p-10 w-full">
       <div className="hidden sm:block">
         <div
           className="flex border border-gray-300 bg-gray-100 items-center 
@@ -80,6 +95,7 @@ const CartList: FC<CartListProps> = ({
                         quantity: +event.target.value,
                         price: item.price,
                         email: user.email,
+                        isLoggedIn,
                       })
                     }
                   />
@@ -117,6 +133,7 @@ const mapStateToProps = (state: AppState) => ({
   cartMap: cartMapSelector(state),
   couponCode: couponCodeSelector(state),
   user: userSelector(state),
+  isLoggedIn: isLoggedInSelector(state),
 });
 
 const mapDispatchToProps = {
@@ -124,6 +141,7 @@ const mapDispatchToProps = {
   onDeleteFromCart: onDeleteFromCartAction,
   getDiscountPercentage: getDiscountPercentageInitiatedAction,
   changeCouponCode: changeCouponCodeAction,
+  getProductByIdsInitiated: getProductByIdsInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

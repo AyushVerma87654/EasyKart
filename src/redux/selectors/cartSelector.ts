@@ -13,11 +13,11 @@ export const cartMapSelector = createSelector(
   [cartSelector, productSelector],
   (cart, products) =>
     Object.keys(cart).map((id) => ({
-      id: products[+id].id,
-      title: products[+id].title,
-      price: products[+id].price,
-      thumbnail: products[+id].thumbnail,
-      quantity: cart[+id].quantity,
+      id: cart[+id]?.productId,
+      title: products[+id]?.title,
+      price: products[+id]?.price,
+      thumbnail: products[+id]?.thumbnail,
+      quantity: cart[+id]?.quantity,
     }))
 );
 

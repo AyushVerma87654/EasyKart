@@ -1,3 +1,5 @@
+import { Cart } from "./cart";
+
 export type User = {
   fullName: string;
   userName: string;
@@ -31,7 +33,15 @@ export type ResetPasswordPayload = {
   email: string;
 };
 
+export type ResponseUser = {
+  fullName: string;
+  userName: string;
+  email: string;
+  isVerified: boolean;
+  cart: { items: Cart };
+};
+
 export type AuthCompletedResponse = {
-  user: User;
+  user: ResponseUser;
   accessToken: string;
 };

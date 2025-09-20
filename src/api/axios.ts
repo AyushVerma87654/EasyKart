@@ -2,7 +2,8 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.PROD
   ? "https://easykartbackendbyayush.onrender.com"
-  : "/api";
+  : //   : "/api";
+    "/localapi";
 
 console.log("API_BASE_URL", API_BASE_URL);
 

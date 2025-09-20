@@ -17,6 +17,8 @@ import {
 } from "./redux/selectors/productSelector";
 import { fetchMeInitiatedAction } from "./redux/slice/userSlice";
 import { isLoggedInSelector } from "./redux/selectors/userSelector";
+import { cartLoadingCompletedAction } from "./redux/slice/cartSlice";
+import { Cart } from "./models/cart";
 
 interface ProductListProps extends ReduxProps {}
 
@@ -28,8 +30,10 @@ const ProductList: FC<ProductListProps> = ({
   isLoggedIn,
   paginationData,
   metaData,
+  cartLoadingCompleted,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  console.log("metaData", metaData.currentPage);
 
   const params = Object.fromEntries([...searchParams]);
 
@@ -41,6 +45,10 @@ const ProductList: FC<ProductListProps> = ({
 
   useEffect(() => {
     !isLoggedIn && fetchProfile();
+    if (!isLoggedIn) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+      cartLoadingCompleted({ cart });
+    }
   }, []);
 
   useEffect(() => {
@@ -122,21 +130,23 @@ const ProductList: FC<ProductListProps> = ({
             <NoMatching />
           ) : (
             <div className="flex m-2 items-center">
-              {metaData.previousPageUrl && (
-                <Link
-                  to={
-                    "?" +
-                    new URLSearchParams({
-                      ...params,
-                      page: JSON.stringify(paginationData.page - 1),
-                    })
-                  }
-                  className="flex items-center"
-                >
-                  <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
-                  Previous
-                </Link>
-              )}
+              <div className="w-32">
+                {metaData.previousPageUrl && (
+                  <Link
+                    to={
+                      "?" +
+                      new URLSearchParams({
+                        ...params,
+                        page: JSON.stringify(paginationData.page - 1),
+                      })
+                    }
+                    className="flex items-center"
+                  >
+                    <HiArrowCircleLeft className="text-5xl ml-5 px-1" />
+                    Previous
+                  </Link>
+                )}
+              </div>
 
               <div className="flex mt-3 mx-auto">
                 {range(1, metaData.lastPage + 1).map((item) => {
@@ -161,22 +171,23 @@ const ProductList: FC<ProductListProps> = ({
                   );
                 })}
               </div>
-
-              {metaData.nextPageUrl && (
-                <Link
-                  to={
-                    "?" +
-                    new URLSearchParams({
-                      ...params,
-                      page: JSON.stringify(paginationData.page + 1),
-                    })
-                  }
-                  className="flex items-center"
-                >
-                  Next
-                  <HiArrowCircleRight className="text-5xl ml-5 px-1" />
-                </Link>
-              )}
+              <div className="w-32">
+                {metaData.nextPageUrl && (
+                  <Link
+                    to={
+                      "?" +
+                      new URLSearchParams({
+                        ...params,
+                        page: JSON.stringify(paginationData.page + 1),
+                      })
+                    }
+                    className="flex items-center"
+                  >
+                    Next
+                    <HiArrowCircleRight className="text-5xl ml-5 px-1" />
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -196,6 +207,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = {
   getAllProducts: getAllProductsInitiatedAction,
   fetchProfile: fetchMeInitiatedAction,
+  cartLoadingCompleted: cartLoadingCompletedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

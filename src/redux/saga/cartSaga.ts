@@ -46,21 +46,39 @@ function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
     (state: AppState) => state.cart.cart
   )) as Cart;
   console.log("prevState", prevState);
-  try {
-    const response = (yield call(
-      updateCart,
-      action.payload
-    )) as ResponsePayload<{
-      cart: Cart;
-    }>;
-    yield put(onAddToCartCompletedAction(response.responseDetails));
-  } catch (error: any) {
-    yield put(
-      onAddToCartErrorAction({
-        cart: prevState,
-        message: error.message,
-      })
-    );
+
+  if (!action.payload.isLoggedIn) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+    const quantity =
+      (cart?.[action.payload.id]?.quantity || 0) + action.payload.quantity;
+    const newCart = {
+      ...cart,
+      [action.payload.id]: {
+        productId: action.payload.id,
+        quantity: quantity,
+        price: action.payload.price,
+        amount: action.payload.price * quantity,
+      },
+    };
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    yield put(onAddToCartCompletedAction({ cart }));
+  } else {
+    try {
+      const response = (yield call(
+        updateCart,
+        action.payload
+      )) as ResponsePayload<{
+        cart: Cart;
+      }>;
+      yield put(onAddToCartCompletedAction(response.responseDetails));
+    } catch (error: any) {
+      yield put(
+        onAddToCartErrorAction({
+          cart: prevState,
+          message: error.message,
+        })
+      );
+    }
   }
 }
 

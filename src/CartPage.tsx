@@ -7,13 +7,27 @@ import { cartType } from "./models";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { totalItemsSelector } from "./redux/selectors/cartSelector";
-import { fetchCouponsInitiatedAction } from "./redux/slice/cartSlice";
+import {
+  cartLoadingCompletedAction,
+  fetchCouponsInitiatedAction,
+} from "./redux/slice/cartSlice";
+import { isLoggedInSelector } from "./redux/selectors/userSelector";
+import { Cart } from "./models/cart";
 
 interface CartPageProps extends ReduxProps {}
 
-const CartPage: FC<CartPageProps> = ({ totalItems, fetchCoupons }) => {
+const CartPage: FC<CartPageProps> = ({
+  totalItems,
+  fetchCoupons,
+  cartLoadingCompleted,
+  isLoggedIn,
+}) => {
   useEffect(() => {
     fetchCoupons();
+    if (!isLoggedIn) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+      cartLoadingCompleted({ cart });
+    }
   }, []);
   if (totalItems == 0) {
     return <CartEmpty />;
@@ -28,10 +42,12 @@ const CartPage: FC<CartPageProps> = ({ totalItems, fetchCoupons }) => {
 
 const mapStateToProps = (state: AppState) => ({
   totalItems: totalItemsSelector(state),
+  isLoggedIn: isLoggedInSelector(state),
 });
 
 const mapDispatchToProps = {
   fetchCoupons: fetchCouponsInitiatedAction,
+  cartLoadingCompleted: cartLoadingCompletedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

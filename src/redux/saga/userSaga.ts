@@ -43,6 +43,7 @@ import {
   signupUser,
 } from "../../api/user";
 import { ResponsePayload } from "../../models/response";
+import { cartLoadingCompletedAction } from "../slice/cartSlice";
 
 function* signup(action: PayloadAction<SignUpPayload>): Generator {
   try {
@@ -73,6 +74,11 @@ function* login(action: PayloadAction<LoginPayload>): Generator {
         accessToken: response.responseDetails.accessToken,
       })
     );
+    yield put(
+      cartLoadingCompletedAction({
+        cart: response.responseDetails.user.cart.items,
+      })
+    );
   } catch (error: any) {
     yield put(authErrorAction({ error: error.message }));
   }
@@ -87,6 +93,11 @@ function* fetchme(): Generator {
       authCompletedAction({
         user: response.responseDetails.user,
         accessToken: response.responseDetails.accessToken,
+      })
+    );
+    yield put(
+      cartLoadingCompletedAction({
+        cart: response.responseDetails.user.cart.items,
       })
     );
   } catch (error: any) {

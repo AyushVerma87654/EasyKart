@@ -15,8 +15,15 @@ import {
   changeInputQuantityAction,
   getProductByIdInitiatedAction,
 } from "./redux/slice/productSlice";
-import { onAddToCartInitiatedAction } from "./redux/slice/cartSlice";
-import { userSelector } from "./redux/selectors/userSelector";
+import {
+  cartLoadingCompletedAction,
+  onAddToCartInitiatedAction,
+} from "./redux/slice/cartSlice";
+import {
+  isLoggedInSelector,
+  userSelector,
+} from "./redux/selectors/userSelector";
+import { Cart } from "./models/cart";
 
 interface ProductDisplayProps extends ReduxProps {}
 
@@ -29,6 +36,8 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
   changeInputQuantity,
   onAddToCart,
   user,
+  isLoggedIn,
+  cartLoadingCompleted,
 }) => {
   const params = useParams();
   const newId = params.id !== undefined ? +params.id : 0;
@@ -37,6 +46,12 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
       getProductById(newId);
     }
   }, [newId !== selectedId]);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+      cartLoadingCompleted({ cart });
+    }
+  }, []);
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     changeInputQuantity(+event.target.value);
@@ -46,8 +61,9 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
     onAddToCart({
       id: selectedId,
       quantity: inputQuantity,
-      price: individualProduct.price,
+      price: +individualProduct.price,
       email: user.email,
+      isLoggedIn,
     });
   }
 
@@ -147,12 +163,14 @@ const mapStateToProps = (state: AppState) => ({
   selectedId: selectedIdSelector(state),
   inputQuantity: inputQuantitySelector(state),
   user: userSelector(state),
+  isLoggedIn: isLoggedInSelector(state),
 });
 
 const mapDispatchToProps = {
   getProductById: getProductByIdInitiatedAction,
   changeInputQuantity: changeInputQuantityAction,
   onAddToCart: onAddToCartInitiatedAction,
+  cartLoadingCompleted: cartLoadingCompletedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

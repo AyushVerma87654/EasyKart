@@ -7,8 +7,13 @@ import {
   getAllProductsInitiatedAction,
   getProductByIdCompletedAction,
   getProductByIdInitiatedAction,
+  getProductByIdsInitiatedAction,
 } from "../slice/productSlice";
-import { fetchProductById, fetchAllProducts } from "../../api/product";
+import {
+  fetchProductById,
+  fetchAllProducts,
+  fetchProductByIds,
+} from "../../api/product";
 import { Product, ProductMap } from "../../models/product";
 
 function* getAllProducts(action: PayloadAction<PaginationData>): Generator {
@@ -38,9 +43,25 @@ function* getProductById(action: PayloadAction<number>): Generator {
   }
 }
 
+function* getProductByIds(action: PayloadAction<number[]>): Generator {
+  try {
+    const response = (yield call(
+      fetchProductByIds,
+      action.payload
+    )) as ResponsePayload<{
+      products: ProductMap;
+      metaData: MetaData;
+    }>;
+    yield put(getAllProductsCompletedAction(response.responseDetails));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function* productSaga() {
   yield debounce(1000, getAllProductsInitiatedAction, getAllProducts);
   yield takeEvery(getProductByIdInitiatedAction, getProductById);
+  yield takeEvery(getProductByIdsInitiatedAction, getProductByIds);
 }
 
 export default productSaga;
