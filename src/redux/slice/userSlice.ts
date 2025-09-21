@@ -102,6 +102,7 @@ function authCompleted(
   state.user = action.payload.user;
   state.accessToken = action.payload.accessToken;
   state.isLoggedIn = true;
+  localStorage.removeItem("cart");
 }
 
 function authError(state: UserState, action: PayloadAction<{ error: string }>) {

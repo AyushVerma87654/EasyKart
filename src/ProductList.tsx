@@ -96,6 +96,7 @@ const ProductList: FC<ProductListProps> = ({
   }
 
   if (productLoading && products.length === 0) return <Loading />;
+
   return (
     <div className="flex flex-col w-full">
       {products && (

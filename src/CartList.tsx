@@ -41,7 +41,6 @@ const CartList: FC<CartListProps> = ({
     });
     if (arrayOfIds.length) {
       getProductByIdsInitiated(arrayOfIds);
-      localStorage.setItem("cart-loading", "true");
     }
   }, []);
   return (

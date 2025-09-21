@@ -43,7 +43,10 @@ import {
   signupUser,
 } from "../../api/user";
 import { ResponsePayload } from "../../models/response";
-import { cartLoadingCompletedAction } from "../slice/cartSlice";
+import {
+  cartLoadingCompletedAction,
+  deleteCartAction,
+} from "../slice/cartSlice";
 
 function* signup(action: PayloadAction<SignUpPayload>): Generator {
   try {
@@ -115,6 +118,7 @@ function* logOut(): Generator {
         message: response.responseDetails.message,
       })
     );
+    yield put(deleteCartAction());
   } catch (error: any) {
     yield put(logoutErrorAction({ error: error.message }));
   }
@@ -135,6 +139,7 @@ function* accountDeletion(
         message: response.responseDetails.message,
       })
     );
+    yield put(deleteCartAction());
   } catch (error: any) {
     yield put(accountDeletionErrorAction({ error: error.message }));
   }

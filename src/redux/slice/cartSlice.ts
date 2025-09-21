@@ -22,7 +22,7 @@ const initialState: CartState = {
   couponCode: "",
   couponDiscountPercentage: 0,
   coupon: [],
-  loading: true,
+  loading: false,
   message: "",
 };
 
@@ -42,6 +42,7 @@ const cartSlice = createSlice({
     fetchCouponsInitiated,
     fetchCouponsCompleted,
     fetchCouponsError,
+    deleteCart,
   },
 });
 
@@ -61,6 +62,7 @@ export const {
   fetchCouponsInitiated: fetchCouponsInitiatedAction,
   fetchCouponsCompleted: fetchCouponsCompletedAction,
   fetchCouponsError: fetchCouponsErrorAction,
+  deleteCart: deleteCartAction,
 } = actions;
 
 export default cartReducer;
@@ -167,4 +169,8 @@ function fetchCouponsError(
   action: PayloadAction<{ message: string }>
 ) {
   state.message = action.payload.message;
+}
+
+function deleteCart(state: CartState) {
+  return { ...initialState, coupon: state.coupon };
 }

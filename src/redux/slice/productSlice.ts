@@ -56,6 +56,7 @@ const productSlice = createSlice({
     getProductByIdInitiated,
     getProductByIdCompleted,
     getProductByIdsInitiated,
+    getProductByIdsCompleted,
     changeInputQuantity,
   },
 });
@@ -69,7 +70,7 @@ export const {
   getProductByIdInitiated: getProductByIdInitiatedAction,
   getProductByIdCompleted: getProductByIdCompletedAction,
   getProductByIdsInitiated: getProductByIdsInitiatedAction,
-  getAllProductsCompleted: getProductByIdsCompletedAction,
+  getProductByIdsCompleted: getProductByIdsCompletedAction,
   changeInputQuantity: changeInputQuantityAction,
 } = actions;
 
@@ -101,19 +102,15 @@ function getAllProductsCompleted(
     data = { ...data, [product.id]: product };
     ids = [...ids, product.id];
   });
-  const cartLoading = localStorage.getItem("cart-loading");
-  if (cartLoading) {
-    state.products = { ...state.products, ...data };
-    (state.metaData = action.payload.metaData),
-      (state.entities = {
-        ...state.entities,
-        [normalizedQuery]: {
-          ...state.entities[normalizedQuery],
-          [state.paginationData.page]: ids,
-        },
-      });
-    localStorage.setItem("cart-loading", "false");
-  }
+  state.products = { ...state.products, ...data };
+  (state.metaData = action.payload.metaData),
+    (state.entities = {
+      ...state.entities,
+      [normalizedQuery]: {
+        ...state.entities[normalizedQuery],
+        [state.paginationData.page]: ids,
+      },
+    });
 }
 
 function messageWhileFetchingProducts(
@@ -147,6 +144,18 @@ function getProductByIdsInitiated(
   _action: PayloadAction<number[]>
 ) {
   state.loading = true;
+}
+
+function getProductByIdsCompleted(
+  state: ProductState,
+  action: PayloadAction<ProductMapResponse>
+) {
+  state.loading = false;
+  let data = {};
+  action.payload.products.map((product) => {
+    data = { ...data, [product.id]: product };
+  });
+  state.products = { ...state.products, ...data };
 }
 
 function changeInputQuantity(

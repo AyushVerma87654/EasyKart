@@ -7,6 +7,7 @@ import {
   getAllProductsInitiatedAction,
   getProductByIdCompletedAction,
   getProductByIdInitiatedAction,
+  getProductByIdsCompletedAction,
   getProductByIdsInitiatedAction,
 } from "../slice/productSlice";
 import {
@@ -52,7 +53,7 @@ function* getProductByIds(action: PayloadAction<number[]>): Generator {
       products: ProductMap;
       metaData: MetaData;
     }>;
-    yield put(getAllProductsCompletedAction(response.responseDetails));
+    yield put(getProductByIdsCompletedAction(response.responseDetails));
   } catch (error) {
     console.log(error);
   }
