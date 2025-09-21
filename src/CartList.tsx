@@ -33,14 +33,16 @@ const CartList: FC<CartListProps> = ({
   isLoggedIn,
   getProductByIdsInitiated,
 }) => {
-  console.log("cartMap", cartMap);
   useEffect(() => {
     let arrayOfIds: number[] = [];
     cartMap.forEach((product) => {
       if (!product.price || !product.title || !product.thumbnail)
         arrayOfIds.push(product.id);
     });
-    if (arrayOfIds.length) getProductByIdsInitiated(arrayOfIds);
+    if (arrayOfIds.length) {
+      getProductByIdsInitiated(arrayOfIds);
+      localStorage.setItem("cart-loading", "true");
+    }
   }, []);
   return (
     <div key={343} className="sm:p-10 w-full">

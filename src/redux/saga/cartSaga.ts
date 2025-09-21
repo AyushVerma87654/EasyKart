@@ -45,7 +45,6 @@ function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
   const prevState = (yield select(
     (state: AppState) => state.cart.cart
   )) as Cart;
-  console.log("prevState", prevState);
 
   if (!action.payload.isLoggedIn) {
     const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
@@ -61,7 +60,7 @@ function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
       },
     };
     localStorage.setItem("cart", JSON.stringify(newCart));
-    yield put(onAddToCartCompletedAction({ cart }));
+    yield put(onAddToCartCompletedAction({ cart: newCart }));
   } else {
     try {
       const response = (yield call(

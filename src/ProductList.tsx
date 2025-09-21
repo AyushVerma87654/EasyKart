@@ -33,7 +33,6 @@ const ProductList: FC<ProductListProps> = ({
   cartLoadingCompleted,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log("metaData", metaData.currentPage);
 
   const params = Object.fromEntries([...searchParams]);
 
@@ -96,12 +95,7 @@ const ProductList: FC<ProductListProps> = ({
     );
   }
 
-  console.log("products", paginationData.page, products, products.length);
-
-  if (productLoading && products.length === 0) {
-    return <Loading />;
-  }
-
+  if (productLoading && products.length === 0) return <Loading />;
   return (
     <div className="flex flex-col w-full">
       {products && (
