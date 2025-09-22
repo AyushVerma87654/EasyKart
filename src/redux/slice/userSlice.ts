@@ -8,6 +8,7 @@ export type UserState = {
   loading: boolean;
   message: string;
   isLoggedIn: boolean;
+  isUpdatingProfile: boolean;
   verificationEmail: string;
   codeVerificationStatus: CodeVerification;
 };
@@ -23,6 +24,7 @@ const initialState: UserState = {
   loading: false,
   message: "",
   isLoggedIn: false,
+  isUpdatingProfile: false,
   verificationEmail: "",
   codeVerificationStatus: CodeVerification.NULL,
 };
@@ -54,6 +56,10 @@ const userSlice = createSlice({
     updateDataInitiated,
     updateDataCompleted,
     updateDataError,
+    toggleIsUpdatingProfile,
+    updatingProfileInitiated,
+    updatingProfileCompleted,
+    updatingProfileError,
   },
 });
 
@@ -83,6 +89,10 @@ export const {
   updateDataInitiated: updateDataInitiatedAction,
   updateDataCompleted: updateDataCompletedAction,
   updateDataError: updateDataErrorAction,
+  toggleIsUpdatingProfile: toggleIsUpdatingProfileAction,
+  updatingProfileInitiated: updatingProfileInitiatedAction,
+  updatingProfileCompleted: updatingProfileCompletedAction,
+  updatingProfileError: updatingProfileErrorAction,
 } = actions;
 
 export default userReducer;
@@ -230,6 +240,34 @@ function updateDataCompleted(
 }
 
 function updateDataError(
+  state: UserState,
+  action: PayloadAction<{ error: string }>
+) {
+  state.message = action.payload.error;
+}
+
+function toggleIsUpdatingProfile(state: UserState) {
+  state.isUpdatingProfile = !state.isUpdatingProfile;
+}
+
+function updatingProfileInitiated(
+  state: UserState,
+  _action: PayloadAction<User>
+) {}
+
+function updatingProfileCompleted(
+  state: UserState,
+  action: PayloadAction<User>
+) {
+  state.user = {
+    ...state.user,
+    fullName: action.payload.fullName,
+    userName: action.payload.userName,
+  };
+  state.isUpdatingProfile = false;
+}
+
+function updatingProfileError(
   state: UserState,
   action: PayloadAction<{ error: string }>
 ) {

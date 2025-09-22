@@ -22,6 +22,9 @@ import {
   updateDataCompletedAction,
   updateDataErrorAction,
   updateDataInitiatedAction,
+  updatingProfileCompletedAction,
+  updatingProfileErrorAction,
+  updatingProfileInitiatedAction,
   verificationCodeSentAction,
 } from "../slice/userSlice";
 import {
@@ -30,6 +33,7 @@ import {
   AuthCompletedResponse,
   ForgetPasswordPayload,
   ResetPasswordPayload,
+  User,
 } from "../../models/user";
 import {
   codeVerification,
@@ -41,6 +45,7 @@ import {
   resetPassword,
   sendMail,
   signupUser,
+  updateProfile,
 } from "../../api/user";
 import { ResponsePayload } from "../../models/response";
 import {
@@ -204,6 +209,18 @@ function* updateData(): Generator {
   }
 }
 
+function* updatingProfile(action: PayloadAction<User>): Generator {
+  try {
+    const response = (yield call(
+      updateProfile,
+      action.payload
+    )) as ResponsePayload<User>;
+    yield put(updatingProfileCompletedAction(response.responseDetails));
+  } catch (error: any) {
+    yield put(updatingProfileErrorAction({ error: error.message }));
+  }
+}
+
 function* userSaga() {
   yield takeEvery(signupInitiatedAction, signup);
   yield takeEvery(loginInitiatedAction, login);
@@ -214,6 +231,7 @@ function* userSaga() {
   yield takeEvery(codeVerificationInitiatedAction, verifyCode);
   yield takeEvery(resetPasswordInitiatedAction, passwordReset);
   yield takeEvery(updateDataInitiatedAction, updateData);
+  yield takeEvery(updatingProfileInitiatedAction, updatingProfile);
 }
 
 export default userSaga;

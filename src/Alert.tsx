@@ -31,7 +31,7 @@ const Alert: FC<AlertProps> = () => {
   // const { color, Icon } = type == "success" ? theme.success : theme.error;
   // // const { color, Icon } = object;
   return (
-    <div className="flex items-center justify-between my-4 bg-white p-4">
+    <div className="">
       {/* <div className="flex items-center space-x-3">
         <Icon className={"text-6xl " + color} />
         <div className="font-bold text-xl">{type}</div>

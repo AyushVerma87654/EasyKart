@@ -17,6 +17,8 @@ const Input: FC<InputProps> = ({
   onChange,
   value,
   autoComplete,
+  defaultValue,
+  disabled,
 }) => {
   let border = "border-gray-300";
 
@@ -37,9 +39,11 @@ const Input: FC<InputProps> = ({
         id={id}
         type={type}
         value={value}
+        defaultValue={defaultValue}
         onBlur={onBlur}
         onChange={onChange}
         autoComplete={autoComplete}
+        disabled={disabled}
         className={
           "focus:outline-none rounded-md border-2 w-full px-3 h-12 focus:border-blue-500 " +
           border

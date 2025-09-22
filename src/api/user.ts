@@ -1,6 +1,6 @@
 import { ResponsePayload } from "./../models/response";
 import instance from "./axios";
-import { AuthCompletedResponse } from "../models/user";
+import { AuthCompletedResponse, User } from "../models/user";
 
 export const signupUser = async (data: {
   fullName: string;
@@ -46,3 +46,8 @@ export const resetPassword = async (data: {
 export const dataUpdate = async (): Promise<
   ResponsePayload<{ message: string }>
 > => instance.get("/updateData").then((res) => res.data);
+
+export const updateProfile = async (
+  data: User
+): Promise<ResponsePayload<{ message: string }>> =>
+  instance.post("/update-profile", { user: data }).then((res) => res.data);

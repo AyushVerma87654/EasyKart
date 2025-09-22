@@ -32,3 +32,8 @@ export const codeVerificationStatusSelector = createSelector(
   [userStateSelector],
   (state) => state.codeVerificationStatus
 );
+
+export const isUpdatingProfileSelector = createSelector(
+  [userStateSelector],
+  (state) => state.isUpdatingProfile
+);
