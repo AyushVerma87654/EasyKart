@@ -1,16 +1,19 @@
 import { withFormik } from "formik";
 import Input from "./Input";
-import React, { FC, FormEventHandler } from "react";
+import { FC, FormEventHandler, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
-import axios from "axios";
-import { withAlert, withUser } from "./ContextHoc";
-import { fnType, setAlertType, setUserType } from "./models";
 import { SignUpPayload } from "./models/user";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
-import { signupInitiatedAction } from "./redux/slice/userSlice";
+import {
+  fetchMeInitiatedAction,
+  signupInitiatedAction,
+} from "./redux/slice/userSlice";
+import { isLoggedInSelector } from "./redux/selectors/userSelector";
+import { cartLoadingCompletedAction } from "./redux/slice/cartSlice";
+import { Cart } from "./models/cart";
 
 const schema = Yup.object().shape({
   fullName: Yup.string().required(),
@@ -34,9 +37,9 @@ const initialValues = {
 
 interface SignUpPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
-  handleChange: fnType;
-  resetForm: fnType;
-  handleBlur: fnType;
+  handleChange: () => void;
+  resetForm: () => void;
+  handleBlur: () => void;
   values: SignUpPayload;
   touched: SignUpPayload;
   errors: SignUpPayload;
@@ -53,7 +56,17 @@ const SignUpPage: FC<SignUpPageProps> = ({
   errors,
   isValid,
   resetForm,
+  fetchProfile,
+  isLoggedIn,
+  cartLoadingCompleted,
 }) => {
+  useEffect(() => {
+    !isLoggedIn && fetchProfile();
+    if (!isLoggedIn) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+      cartLoadingCompleted({ cart });
+    }
+  }, []);
   return (
     <div className="text-gray-600 py-4">
       <h1 className="font-bold text-2xl mt-3 mb-6">Sign Up</h1>
@@ -156,10 +169,14 @@ const myHoc = withFormik<SignUpPageProps, SignUpPayload>({
   validateOnMount: true,
 })(SignUpPage);
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: isLoggedInSelector(state),
+});
 
 const mapDispatchToProps = {
   signupUser: signupInitiatedAction,
+  fetchProfile: fetchMeInitiatedAction,
+  cartLoadingCompleted: cartLoadingCompletedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -3,8 +3,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { withFormik } from "formik";
 import * as Yup from "yup";
-import { fnType } from "./models";
-import { ForgetPasswordPayload } from "./models/user";
 import Input from "./Input";
 import CartButton from "./CartButton";
 import { Link, Navigate } from "react-router-dom";
@@ -31,9 +29,9 @@ type ResetPasswordProps = typeof initialValues;
 
 interface ResetPasswordPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
-  handleChange: fnType;
-  resetForm: fnType;
-  handleBlur: fnType;
+  handleChange: () => {};
+  resetForm: () => {};
+  handleBlur: () => {};
   values: ResetPasswordProps;
   touched: ResetPasswordProps;
   errors: ResetPasswordProps;

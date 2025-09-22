@@ -1,10 +1,9 @@
-import React, { useState, FC } from "react";
+import { useState, FC } from "react";
 import { Link } from "react-router-dom";
 import { CgMenuGridO } from "react-icons/cg";
 import MobileMenu from "./MobileMenu";
 import LaptopMenu from "./LaptopMenu";
 import { CgShoppingCart } from "react-icons/cg";
-import { withCart } from "./ContextHoc";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { totalItemsSelector } from "./redux/selectors/cartSelector";

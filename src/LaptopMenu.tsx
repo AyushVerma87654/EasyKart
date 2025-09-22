@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { Link } from "react-router-dom";
 import { CgShoppingCart } from "react-icons/cg";
 import { connect, ConnectedProps } from "react-redux";

@@ -1,8 +1,10 @@
-import React, { memo } from "react";
+import { memo, FC } from "react";
 import { HiArrowCircleLeft } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
-function PageNotFound() {
+interface PageNotFoundProps {}
+
+const PageNotFound: FC<PageNotFoundProps> = () => {
   return (
     <div>
       <div className="flex flex-col items-center m-4">
@@ -20,6 +22,6 @@ function PageNotFound() {
       </Link>
     </div>
   );
-}
+};
 
 export default memo(PageNotFound);

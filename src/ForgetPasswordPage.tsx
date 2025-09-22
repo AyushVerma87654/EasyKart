@@ -4,7 +4,6 @@ import { Link, Navigate } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
-import { fnType } from "./models";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { ForgetPasswordPayload } from "./models/user";
@@ -22,9 +21,9 @@ const initialValue = {
 
 interface ForgetPasswordPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
-  handleChange: fnType;
-  resetForm: fnType;
-  handleBlur: fnType;
+  handleChange: () => {};
+  resetForm: () => {};
+  handleBlur: () => {};
   values: ForgetPasswordPayload;
   touched: ForgetPasswordPayload;
   errors: ForgetPasswordPayload;

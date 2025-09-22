@@ -17,7 +17,7 @@ export const loginUser = async (data: {
 
 export const fetchMe = async (): Promise<
   ResponsePayload<AuthCompletedResponse>
-> => instance.get("/me", { withCredentials: true }).then((res) => res.data);
+> => instance.get("/me").then((res) => res.data);
 
 export const logout = async (): Promise<ResponsePayload<{ message: string }>> =>
   instance.get("/logout").then((res) => res.data);
@@ -25,9 +25,7 @@ export const logout = async (): Promise<ResponsePayload<{ message: string }>> =>
 export const deleteAccount = async (data: {
   email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  instance
-    .post("/deleteAccount", data, { withCredentials: true })
-    .then((res) => res.data);
+  instance.post("/deleteAccount", data).then((res) => res.data);
 
 export const sendMail = async (data: {
   email: string;
@@ -43,15 +41,8 @@ export const resetPassword = async (data: {
   password: string;
   email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
-  instance
-    .post("/resetPassword", data, {
-      withCredentials: true,
-    })
-    .then((res) => res.data);
+  instance.post("/resetPassword", data).then((res) => res.data);
 
 export const dataUpdate = async (): Promise<
   ResponsePayload<{ message: string }>
-> =>
-  instance
-    .get("/updateData", { withCredentials: true })
-    .then((res) => res.data);
+> => instance.get("/updateData").then((res) => res.data);

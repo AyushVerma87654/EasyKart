@@ -6,7 +6,7 @@ export const totalAmount = (cart: Cart) =>
 export const totalItems = (cart: Cart) =>
   Object.values(cart).reduce((total, current) => total + current.quantity, 0);
 
-export const editCart = (data: EditCartItemPayload) => ({
+export const createCartItem = (data: EditCartItemPayload) => ({
   [data.id]: {
     productId: data.id,
     quantity: data.quantity,

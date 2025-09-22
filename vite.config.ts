@@ -7,16 +7,10 @@ export default defineConfig({
     port: 4444,
     proxy: {
       "/api": {
-        target: "https://easykartbackendbyayush.onrender.com",
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ""), // strips `/api`,
-      },
-      "/localapi": {
         target: "http://localhost:8888",
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/localapi/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ""), // strips `/api`,
       },
     },
   },

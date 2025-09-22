@@ -21,9 +21,3 @@ export const fetchDiscountPercentage = async (couponCode: string) => {
 export const fetchCoupons = async () => {
   return instance.get("/coupon").then((res) => res.data);
 };
-
-export const updateCart = async (data: EditCartItemPayload) => {
-  return instance
-    .post("/cart/update", data, { withCredentials: true })
-    .then((res) => res.data);
-};

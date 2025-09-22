@@ -1,4 +1,4 @@
-import React, { FC, ButtonHTMLAttributes, memo } from "react";
+import { FC, ButtonHTMLAttributes, memo } from "react";
 
 type CartButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 

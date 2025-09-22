@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Cart, EditCartItemPayload } from "../../models/cart";
+import {
+  Cart,
+  DeleteCartItemPayload,
+  EditCartItemPayload,
+} from "../../models/cart";
 import { CouponMap } from "../../models/cart";
-import { editCart, totalAmount, totalItems } from "../../utility/cart";
+import { createCartItem, totalAmount, totalItems } from "../../utility/cart";
 import { normalizeEntities } from "../../utility/utils";
 
 export type CartState = {
@@ -30,10 +34,9 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    onAddToCartInitiated,
-    onAddToCartCompleted,
-    onAddToCartError,
-    onQuantityChangeFromCart,
+    editingCartInitiated,
+    editingCartCompleted,
+    editingCartError,
     onDeleteFromCart,
     changeCouponCode,
     getDiscountPercentageInitiated,
@@ -49,11 +52,10 @@ const cartSlice = createSlice({
 const { actions, reducer: cartReducer } = cartSlice;
 
 export const {
-  onAddToCartInitiated: onAddToCartInitiatedAction,
-  onAddToCartCompleted: onAddToCartCompletedAction,
-  onAddToCartError: onAddToCartErrorAction,
-  onAddToCartCompleted: cartLoadingCompletedAction,
-  onQuantityChangeFromCart: onQuantityChangeFromCartAction,
+  editingCartInitiated: editingCartInitiatedAction,
+  editingCartCompleted: editingCartCompletedAction,
+  editingCartError: editingCartErrorAction,
+  editingCartCompleted: cartLoadingCompletedAction,
   onDeleteFromCart: onDeleteFromCartAction,
   changeCouponCode: changeCouponCodeAction,
   getDiscountPercentageInitiated: getDiscountPercentageInitiatedAction,
@@ -67,11 +69,11 @@ export const {
 
 export default cartReducer;
 
-function onAddToCartInitiated(
+function editingCartInitiated(
   state: CartState,
   action: PayloadAction<EditCartItemPayload>
 ) {
-  const newCartItem = editCart(action.payload);
+  const newCartItem = createCartItem(action.payload);
   state.cart = {
     ...state.cart,
     [action.payload.id]: {
@@ -85,7 +87,7 @@ function onAddToCartInitiated(
   state.loading = true;
 }
 
-function onAddToCartCompleted(
+function editingCartCompleted(
   state: CartState,
   action: PayloadAction<{ cart: Cart }>
 ) {
@@ -96,7 +98,7 @@ function onAddToCartCompleted(
   state.loading = false;
 }
 
-function onAddToCartError(
+function editingCartError(
   state: CartState,
   action: PayloadAction<{ cart: Cart; message: string }>
 ) {
@@ -107,19 +109,9 @@ function onAddToCartError(
   state.loading = false;
 }
 
-function onQuantityChangeFromCart(
-  state: CartState,
-  action: PayloadAction<EditCartItemPayload>
-) {
-  const newCartItem = editCart(action.payload);
-  state.cart = { ...state.cart, ...newCartItem };
-  state.totalAmount = totalAmount(state.cart);
-  state.totalItems = totalItems(state.cart);
-}
-
 function onDeleteFromCart(
   state: CartState,
-  action: PayloadAction<{ id: number }>
+  action: PayloadAction<DeleteCartItemPayload>
 ) {
   delete state.cart[action.payload.id];
   state.totalAmount = totalAmount(state.cart);

@@ -2,14 +2,11 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.PROD
   ? "https://easykartbackendbyayush.onrender.com"
-  : //   : "/api";
-    "/localapi";
-
-console.log("API_BASE_URL", API_BASE_URL);
+  : "/api";
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
-  withCredentials: true, // for cookies/sessions
+  withCredentials: true,
 });
 
 export default instance;

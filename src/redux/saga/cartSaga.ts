@@ -5,18 +5,21 @@ import {
   fetchCouponsInitiatedAction,
   getDiscountPercentageCompletedAction,
   getDiscountPercentageInitiatedAction,
-  onAddToCartCompletedAction,
-  onAddToCartErrorAction,
-  onAddToCartInitiatedAction,
+  editingCartCompletedAction,
+  editingCartErrorAction,
+  editingCartInitiatedAction,
+  onDeleteFromCartAction,
 } from "../slice/cartSlice";
-import {
-  fetchCoupons,
-  fetchDiscountPercentage,
-  updateCart,
-} from "../../api/product";
+import { fetchCoupons, fetchDiscountPercentage } from "../../api/product";
 import { ResponsePayload } from "../../models/response";
-import { Cart, CouponMap, EditCartItemPayload } from "../../models/cart";
+import {
+  Cart,
+  CouponMap,
+  DeleteCartItemPayload,
+  EditCartItemPayload,
+} from "../../models/cart";
 import { AppState } from "../store";
+import { editCart, deleteCartItem } from "../../api/cart";
 
 function* getDiscountPercentage(action: PayloadAction<string>): Generator {
   try {
@@ -41,7 +44,7 @@ function* fetchingCoupons(): Generator {
   }
 }
 
-function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
+function* editingCart(action: PayloadAction<EditCartItemPayload>): Generator {
   const prevState = (yield select(
     (state: AppState) => state.cart.cart
   )) as Cart;
@@ -60,19 +63,51 @@ function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
       },
     };
     localStorage.setItem("cart", JSON.stringify(newCart));
-    yield put(onAddToCartCompletedAction({ cart: newCart }));
+    yield put(editingCartCompletedAction({ cart: newCart }));
   } else {
     try {
       const response = (yield call(
-        updateCart,
+        editCart,
         action.payload
       )) as ResponsePayload<{
         cart: Cart;
       }>;
-      yield put(onAddToCartCompletedAction(response.responseDetails));
+      yield put(editingCartCompletedAction(response.responseDetails));
     } catch (error: any) {
       yield put(
-        onAddToCartErrorAction({
+        editingCartErrorAction({
+          cart: prevState,
+          message: error.message,
+        })
+      );
+    }
+  }
+}
+
+function* deletingItem(
+  action: PayloadAction<DeleteCartItemPayload>
+): Generator {
+  const prevState = (yield select(
+    (state: AppState) => state.cart.cart
+  )) as Cart;
+
+  if (!action.payload.isLoggedIn) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+    delete cart[action.payload.id];
+    localStorage.setItem("cart", JSON.stringify(cart));
+    yield put(editingCartCompletedAction({ cart }));
+  } else {
+    try {
+      const response = (yield call(
+        deleteCartItem,
+        action.payload
+      )) as ResponsePayload<{
+        cart: Cart;
+      }>;
+      yield put(editingCartCompletedAction(response.responseDetails));
+    } catch (error: any) {
+      yield put(
+        editingCartErrorAction({
           cart: prevState,
           message: error.message,
         })
@@ -84,7 +119,8 @@ function* editCart(action: PayloadAction<EditCartItemPayload>): Generator {
 function* cartSaga() {
   yield takeEvery(getDiscountPercentageInitiatedAction, getDiscountPercentage);
   yield takeEvery(fetchCouponsInitiatedAction, fetchingCoupons);
-  yield takeEvery(onAddToCartInitiatedAction, editCart);
+  yield takeEvery(editingCartInitiatedAction, editingCart);
+  yield takeEvery(onDeleteFromCartAction, deletingItem);
 }
 
 export default cartSaga;

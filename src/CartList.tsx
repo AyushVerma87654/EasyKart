@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import {
   cartMapSelector,
-  cartSelector,
   couponCodeSelector,
 } from "./redux/selectors/cartSelector";
 import { AiOutlineCloseCircle } from "react-icons/ai";
@@ -12,7 +11,7 @@ import {
   changeCouponCodeAction,
   getDiscountPercentageInitiatedAction,
   onDeleteFromCartAction,
-  onQuantityChangeFromCartAction,
+  editingCartInitiatedAction,
 } from "./redux/slice/cartSlice";
 import {
   isLoggedInSelector,
@@ -43,6 +42,7 @@ const CartList: FC<CartListProps> = ({
       getProductByIdsInitiated(arrayOfIds);
     }
   }, []);
+
   return (
     <div key={343} className="sm:p-10 w-full">
       <div className="hidden sm:block">
@@ -63,7 +63,13 @@ const CartList: FC<CartListProps> = ({
             <div className="w-full text-gray-700 font-semibold flex flex-col sm:flex-row sm:border border-gray-300 sm:items-center sm:space-x-5 sm:pl-7 sm:pr-10 sm:py-2 sm:h-auto">
               <div className="flex justify-end h-12 px-2 py-3 border border-gray-300 sm:border-white">
                 <AiOutlineCloseCircle
-                  onClick={() => onDeleteFromCart({ id: item.id })}
+                  onClick={() =>
+                    onDeleteFromCart({
+                      id: item.id,
+                      email: user.email,
+                      isLoggedIn,
+                    })
+                  }
                   className="text-gray-300 border border-gray-300 sm:border-white text-2xl"
                 />
               </div>
@@ -93,7 +99,7 @@ const CartList: FC<CartListProps> = ({
                     onChange={(event) =>
                       onQuantityChangeFromCart({
                         id: item.id,
-                        quantity: +event.target.value,
+                        quantity: -(item.quantity - +event.target.value),
                         price: item.price,
                         email: user.email,
                         isLoggedIn,
@@ -104,7 +110,9 @@ const CartList: FC<CartListProps> = ({
               </div>
               <div className="flex justify-between h-11 px-2 py-3 sm:px-1 border sm:border-white border-gray-300">
                 <div className="sm:hidden">Subtotal</div>
-                <div className="sm:w-16">Rs.{item.price * item.quantity}</div>
+                <div className="sm:w-16">
+                  Rs.{(item.price * item.quantity).toFixed(2)}
+                </div>
               </div>
             </div>
           </div>
@@ -138,7 +146,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-  onQuantityChangeFromCart: onQuantityChangeFromCartAction,
+  onQuantityChangeFromCart: editingCartInitiatedAction,
   onDeleteFromCart: onDeleteFromCartAction,
   getDiscountPercentage: getDiscountPercentageInitiatedAction,
   changeCouponCode: changeCouponCodeAction,

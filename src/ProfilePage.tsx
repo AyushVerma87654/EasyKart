@@ -10,7 +10,7 @@ import {
   logoutInitiatedAction,
   updateDataInitiatedAction,
 } from "./redux/slice/userSlice";
-// import { MdEdit } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 interface ProfilePageProps extends ReduxProps {}
 
@@ -21,16 +21,15 @@ const ProfilePage: FC<ProfilePageProps> = ({
   initiateUpdateData,
 }) => {
   const params = useParams();
-  console.log("params", params);
   return (
     <div className="my-8 pt-[2px]">
       <div className="flex items-center justify-center gap-6">
         <div className="rounded-full bg-blue-500 text-rose-700 w-12 h-12 flex items-center justify-center text-3xl font-semibold mx-auto">
           {user.userName.charAt(0).toUpperCase()}
         </div>
-        {/* <div>
+        <div>
           <MdEdit className="text-5xl text-blue-700 bg-rose-500 rounded-full p-2 cursor-pointer" />
-        </div> */}
+        </div>
         {user.email === "termi@gmail.com" && (
           <CartButton
             className="w-fit p-2 bg-blue-500 text-rose-700"

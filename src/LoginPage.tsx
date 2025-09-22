@@ -1,15 +1,19 @@
-import axios from "axios";
 import { withFormik } from "formik";
-import { FC, FormEventHandler } from "react";
+import { FC, FormEventHandler, useEffect } from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import CartButton from "./CartButton";
 import Input from "./Input";
-import { setAlertType, setUserType } from "./models";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { LoginPayload } from "./models/user";
-import { loginInitiatedAction } from "./redux/slice/userSlice";
+import {
+  fetchMeInitiatedAction,
+  loginInitiatedAction,
+} from "./redux/slice/userSlice";
+import { cartLoadingCompletedAction } from "./redux/slice/cartSlice";
+import { isLoggedInSelector } from "./redux/selectors/userSelector";
+import { Cart } from "./models/cart";
 
 const initialValues = {
   email: "",
@@ -39,7 +43,17 @@ const LoginPage: FC<LoginPageProps> = ({
   errors,
   values,
   isValid,
+  fetchProfile,
+  isLoggedIn,
+  cartLoadingCompleted,
 }) => {
+  useEffect(() => {
+    !isLoggedIn && fetchProfile();
+    if (!isLoggedIn) {
+      const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
+      cartLoadingCompleted({ cart });
+    }
+  }, []);
   return (
     <div className="text-gray-600">
       <h1 className="text-2xl font-bold my-6">Login</h1>
@@ -113,10 +127,14 @@ const myHoc = withFormik<LoginPageProps, LoginPayload>({
   validateOnMount: true,
 })(LoginPage);
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = (state: AppState) => ({
+  isLoggedIn: isLoggedInSelector(state),
+});
 
 const mapDispatchToProps = {
   loginUser: loginInitiatedAction,
+  fetchProfile: fetchMeInitiatedAction,
+  cartLoadingCompleted: cartLoadingCompletedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

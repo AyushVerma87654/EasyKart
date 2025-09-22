@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import CartButton from "./CartButton";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
@@ -26,15 +26,15 @@ const CartTotal: FC<CartTotalProps> = ({
             <div className="m-4 p-2">
               <div className="flex p-3 justify-between border border-white border-b-gray-300">
                 <div>Subtotal</div>
-                <div>Rs.{subTotalAmount}</div>
+                <div>Rs.{subTotalAmount.toFixed(2)}</div>
               </div>
               <div className="flex p-3 justify-between border border-white border-b-gray-300">
                 <div>Coupon Discount</div>
-                <div>Rs.{couponDiscount}</div>
+                <div>Rs.{couponDiscount.toFixed(2)}</div>
               </div>
               <div className="flex p-3 justify-between border border-white border-b-gray-300">
                 <div>Total</div>
-                <div>Rs.{finalAmount}</div>
+                <div>Rs.{finalAmount.toFixed(2)}</div>
               </div>
               <div className="w-full h-12 mt-6">
                 <CartButton>PROCEED TO CHECKOUT</CartButton>

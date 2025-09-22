@@ -3,8 +3,6 @@ import { MdVerified } from "react-icons/md";
 import { GoUnverified } from "react-icons/go";
 import CartButton from "./CartButton";
 import AlertShow from "./AlertShow";
-import { withAlert } from "./ContextHoc";
-import { alertType } from "./models";
 
 // const theme = {
 //   success: {

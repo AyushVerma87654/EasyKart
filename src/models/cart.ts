@@ -32,3 +32,9 @@ export type Coupon = {
 };
 
 export type CouponMap = Coupon[];
+
+export type DeleteCartItemPayload = {
+  id: number;
+  email: string;
+  isLoggedIn: boolean;
+};

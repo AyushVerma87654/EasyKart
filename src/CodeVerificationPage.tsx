@@ -1,7 +1,6 @@
 import { FC, FormEventHandler } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
-import { fnType } from "./models";
 import { CodeVerificationPayload } from "./models/user";
 import { withFormik } from "formik";
 import * as Yup from "yup";
@@ -25,9 +24,9 @@ const initialValue = {
 
 interface CodeVerificationPageProps extends ReduxProps {
   handleSubmit: FormEventHandler<HTMLFormElement>;
-  handleChange: fnType;
-  resetForm: fnType;
-  handleBlur: fnType;
+  handleChange: () => {};
+  resetForm: () => {};
+  handleBlur: () => {};
   values: CodeVerificationPayload;
   touched: CodeVerificationPayload;
   errors: CodeVerificationPayload;

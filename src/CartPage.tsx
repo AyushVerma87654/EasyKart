@@ -1,9 +1,7 @@
 import CartList from "./CartList";
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import CartTotal from "./CartTotal";
-import { withCart } from "./ContextHoc";
 import CartEmpty from "./CartEmpty";
-import { cartType } from "./models";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import { totalItemsSelector } from "./redux/selectors/cartSelector";
@@ -13,6 +11,7 @@ import {
 } from "./redux/slice/cartSlice";
 import { isLoggedInSelector } from "./redux/selectors/userSelector";
 import { Cart } from "./models/cart";
+import { fetchMeInitiatedAction } from "./redux/slice/userSlice";
 
 interface CartPageProps extends ReduxProps {}
 
@@ -21,9 +20,11 @@ const CartPage: FC<CartPageProps> = ({
   fetchCoupons,
   cartLoadingCompleted,
   isLoggedIn,
+  fetchProfile,
 }) => {
   useEffect(() => {
     fetchCoupons();
+    !isLoggedIn && fetchProfile();
     if (!isLoggedIn) {
       const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
       cartLoadingCompleted({ cart });
@@ -48,6 +49,7 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = {
   fetchCoupons: fetchCouponsInitiatedAction,
   cartLoadingCompleted: cartLoadingCompletedAction,
+  fetchProfile: fetchMeInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

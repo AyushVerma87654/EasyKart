@@ -1,6 +1,8 @@
-import React, { memo, FC } from "react";
+import { memo, FC } from "react";
 
-function Footer() {
+interface FooterProps {}
+
+const Footer: FC<FooterProps> = () => {
   return (
     <div>
       <div className="bg-gray-800 text-gray-100 flex justify-between px-12 h-20 text-sm items-center py-1">
@@ -9,6 +11,6 @@ function Footer() {
       </div>
     </div>
   );
-}
+};
 
 export default memo(Footer);

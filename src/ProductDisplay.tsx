@@ -17,13 +17,14 @@ import {
 } from "./redux/slice/productSlice";
 import {
   cartLoadingCompletedAction,
-  onAddToCartInitiatedAction,
+  editingCartInitiatedAction,
 } from "./redux/slice/cartSlice";
 import {
   isLoggedInSelector,
   userSelector,
 } from "./redux/selectors/userSelector";
 import { Cart } from "./models/cart";
+import { fetchMeInitiatedAction } from "./redux/slice/userSlice";
 
 interface ProductDisplayProps extends ReduxProps {}
 
@@ -38,6 +39,7 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
   user,
   isLoggedIn,
   cartLoadingCompleted,
+  fetchProfile,
 }) => {
   const params = useParams();
   const newId = params.id !== undefined ? +params.id : 0;
@@ -47,6 +49,7 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
     }
   }, [newId !== selectedId]);
   useEffect(() => {
+    !isLoggedIn && fetchProfile();
     if (!isLoggedIn) {
       const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
       cartLoadingCompleted({ cart });
@@ -169,8 +172,9 @@ const mapStateToProps = (state: AppState) => ({
 const mapDispatchToProps = {
   getProductById: getProductByIdInitiatedAction,
   changeInputQuantity: changeInputQuantityAction,
-  onAddToCart: onAddToCartInitiatedAction,
+  onAddToCart: editingCartInitiatedAction,
   cartLoadingCompleted: cartLoadingCompletedAction,
+  fetchProfile: fetchMeInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
