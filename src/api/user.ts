@@ -7,7 +7,9 @@ export const signupUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  instance.post("/signup", data).then((res) => res.data);
+  instance
+    .post("/signup", data, { withCredentials: true })
+    .then((res) => res.data);
 
 export const loginUser = async (data: {
   email: string;
