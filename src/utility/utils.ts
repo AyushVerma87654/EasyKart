@@ -7,3 +7,6 @@ export const normalizeEntities = (data: any[], key: string) =>
     prev[current[key]] = current;
     return prev;
   }, {});
+
+export const generateUniqueKey = () =>
+  `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;

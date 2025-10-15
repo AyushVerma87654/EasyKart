@@ -1,24 +1,18 @@
 import { FC, InputHTMLAttributes } from "react";
 
 type InputProps = {
+  labelId?: string;
   label?: string;
   touched?: string;
   errors?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const Input: FC<InputProps> = ({
-  name,
-  id,
-  type,
   label,
   touched,
   errors,
-  onBlur,
-  onChange,
-  value,
-  autoComplete,
-  defaultValue,
-  disabled,
+  labelId,
+  ...rest
 }) => {
   let border = "border-gray-300";
 
@@ -29,21 +23,13 @@ const Input: FC<InputProps> = ({
   return (
     <div>
       <div className="py-1">
-        <label htmlFor={id} className="my-2">
+        <label htmlFor={labelId} className="my-2">
           {label}
         </label>
       </div>
 
       <input
-        name={name}
-        id={id}
-        type={type}
-        value={value}
-        defaultValue={defaultValue}
-        onBlur={onBlur}
-        onChange={onChange}
-        autoComplete={autoComplete}
-        disabled={disabled}
+        {...rest}
         className={
           "focus:outline-none rounded-md border-2 w-full px-3 h-12 focus:border-blue-500 " +
           border

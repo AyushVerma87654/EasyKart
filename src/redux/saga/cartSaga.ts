@@ -9,6 +9,7 @@ import {
   editingCartErrorAction,
   editingCartInitiatedAction,
   onDeleteFromCartAction,
+  getDiscountPercentageErrorAction,
 } from "../slice/cartSlice";
 import { fetchCoupons, fetchDiscountPercentage } from "../../api/product";
 import { ResponsePayload } from "../../models/response";
@@ -28,8 +29,12 @@ function* getDiscountPercentage(action: PayloadAction<string>): Generator {
       action.payload
     )) as ResponsePayload<{ discountPercentage: number }>;
     yield put(getDiscountPercentageCompletedAction(response.responseDetails));
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    yield put(
+      getDiscountPercentageErrorAction(
+        error.response.data.responseDetails.message
+      )
+    );
   }
 }
 

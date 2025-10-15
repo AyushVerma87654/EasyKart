@@ -129,14 +129,9 @@ function* logOut(): Generator {
   }
 }
 
-function* accountDeletion(
-  action: PayloadAction<ForgetPasswordPayload>
-): Generator {
+function* accountDeletion(): Generator {
   try {
-    const response = (yield call(
-      deleteAccount,
-      action.payload
-    )) as ResponsePayload<{
+    const response = (yield call(deleteAccount)) as ResponsePayload<{
       message: string;
     }>;
     yield put(
@@ -172,7 +167,11 @@ function* verifyCode(
       codeVerification,
       action.payload
     )) as ResponsePayload<AuthCompletedResponse>;
-    yield put(codeVerificationCompletedAction());
+    yield put(
+      codeVerificationCompletedAction({
+        accessToken: response.responseDetails.accessToken,
+      })
+    );
   } catch (error: any) {
     yield put(forgetPasswordErrorAction({ error: error.message }));
   }

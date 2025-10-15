@@ -1,6 +1,7 @@
 import { Cart } from "./cart";
 
 export type User = {
+  id: number;
   fullName: string;
   userName: string;
   email: string;
@@ -30,10 +31,10 @@ export type CodeVerificationPayload = {
 
 export type ResetPasswordPayload = {
   password: string;
-  email: string;
 };
 
 export type ResponseUser = {
+  id: number;
   fullName: string;
   userName: string;
   email: string;

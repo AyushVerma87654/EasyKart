@@ -5,6 +5,7 @@ import { AppState } from "./redux/store";
 import {
   cartMapSelector,
   couponCodeSelector,
+  couponsMapSelector,
 } from "./redux/selectors/cartSelector";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import {
@@ -31,6 +32,7 @@ const CartList: FC<CartListProps> = ({
   user,
   isLoggedIn,
   getProductByIdsInitiated,
+  coupons,
 }) => {
   useEffect(() => {
     let arrayOfIds: number[] = [];
@@ -43,6 +45,7 @@ const CartList: FC<CartListProps> = ({
     }
   }, []);
 
+  console.log("coupons", coupons);
   return (
     <div key={343} className="sm:p-10 w-full">
       <div className="hidden sm:block">
@@ -66,7 +69,6 @@ const CartList: FC<CartListProps> = ({
                   onClick={() =>
                     onDeleteFromCart({
                       id: item.id,
-                      email: user.email,
                       isLoggedIn,
                     })
                   }
@@ -101,7 +103,6 @@ const CartList: FC<CartListProps> = ({
                         id: item.id,
                         quantity: -(item.quantity - +event.target.value),
                         price: item.price,
-                        email: user.email,
                         isLoggedIn,
                       })
                     }
@@ -118,6 +119,25 @@ const CartList: FC<CartListProps> = ({
           </div>
         </div>
       ))}
+
+      {coupons.length > 0 && (
+        <div className="border border-dashed border-blue-400 bg-blue-50 p-4 rounded-md mb-4">
+          <div className="text-blue-700 font-semibold mb-2">
+            Available Coupons:
+          </div>
+          <div className="flex flex-wrap gap-3">
+            {coupons.map((coupon) => (
+              <div
+                key={coupon.couponCode}
+                onClick={() => changeCouponCode(coupon.couponCode)}
+                className="cursor-pointer bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm border border-blue-300 transition"
+              >
+                {coupon.couponCode} - {coupon.discountPercentage}% OFF
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="border w-full border-gray-300 sm:h-16 py-2 px-3 flex flex-col sm:flex-row justify-around sm:items-center space-y-2 sm:space-y-0">
         <div className="flex">
@@ -143,6 +163,7 @@ const mapStateToProps = (state: AppState) => ({
   couponCode: couponCodeSelector(state),
   user: userSelector(state),
   isLoggedIn: isLoggedInSelector(state),
+  coupons: couponsMapSelector(state),
 });
 
 const mapDispatchToProps = {

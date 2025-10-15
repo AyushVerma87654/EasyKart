@@ -22,10 +22,9 @@ export const fetchMe = async (): Promise<
 export const logout = async (): Promise<ResponsePayload<{ message: string }>> =>
   instance.get("/logout").then((res) => res.data);
 
-export const deleteAccount = async (data: {
-  email: string;
-}): Promise<ResponsePayload<{ message: string }>> =>
-  instance.post("/deleteAccount", data).then((res) => res.data);
+export const deleteAccount = async (): Promise<
+  ResponsePayload<{ message: string }>
+> => instance.get("/deleteAccount").then((res) => res.data);
 
 export const sendMail = async (data: {
   email: string;
@@ -39,7 +38,6 @@ export const codeVerification = async (data: {
 
 export const resetPassword = async (data: {
   password: string;
-  email: string;
 }): Promise<ResponsePayload<{ message: string }>> =>
   instance.post("/resetPassword", data).then((res) => res.data);
 

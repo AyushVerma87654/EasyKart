@@ -12,6 +12,7 @@ import {
 import { isLoggedInSelector } from "./redux/selectors/userSelector";
 import { Cart } from "./models/cart";
 import { fetchMeInitiatedAction } from "./redux/slice/userSlice";
+import CouponCarousel from "./CouponCarousel";
 
 interface CartPageProps extends ReduxProps {}
 
@@ -30,13 +31,18 @@ const CartPage: FC<CartPageProps> = ({
       cartLoadingCompleted({ cart });
     }
   }, []);
-  if (totalItems == 0) {
-    return <CartEmpty />;
-  }
+
   return (
-    <div className="my-14 mx-auto max-w-5xl">
-      <CartList />
-      <CartTotal />
+    <div className="mx-auto max-w-5xl">
+      <CouponCarousel />
+      {totalItems === 0 ? (
+        <CartEmpty />
+      ) : (
+        <>
+          <CartList />
+          <CartTotal />
+        </>
+      )}
     </div>
   );
 };

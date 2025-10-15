@@ -15,6 +15,7 @@ import Alert from "./Alert";
 import ProfilePage from "./ProfilePage";
 import CodeVerificationPage from "./CodeVerificationPage";
 import ResetPasswordPage from "./ResetPasswordPage";
+import Checkout from "./Checkout";
 
 interface AppProps {}
 
@@ -60,6 +61,14 @@ const App: FC<AppProps> = () => {
                 element={
                   <NewUser>
                     <ProfilePage />
+                  </NewUser>
+                }
+              ></Route>
+              <Route
+                path="/checkout"
+                element={
+                  <NewUser>
+                    <Checkout />
                   </NewUser>
                 }
               ></Route>

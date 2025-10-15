@@ -4,7 +4,7 @@ import CartButton from "./CartButton";
 
 const CartEmpty: FC = () => {
   return (
-    <div className="bg-yellow-300 text-green-600 h-full">
+    <div className="bg-yellow-300 text-green-600 h-full pb-1 mb-4">
       <div className="flex flex-col space-y-10 text-4xl p-10 items-center justify-center">
         <h2>Your cart is empty now!</h2>
         <h2 className="text-blue-500"> Add the products to see them here.</h2>

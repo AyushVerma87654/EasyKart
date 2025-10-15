@@ -7,6 +7,7 @@ import {
   finalAmountSelector,
   totalAmountSelector,
 } from "./redux/selectors/cartSelector";
+import { Link } from "react-router-dom";
 
 interface CartTotalProps extends ReduxProps {}
 
@@ -37,7 +38,9 @@ const CartTotal: FC<CartTotalProps> = ({
                 <div>Rs.{finalAmount.toFixed(2)}</div>
               </div>
               <div className="w-full h-12 mt-6">
-                <CartButton>PROCEED TO CHECKOUT</CartButton>
+                <Link to="/checkout">
+                  <CartButton>PROCEED TO CHECKOUT</CartButton>
+                </Link>
               </div>
             </div>
           </div>

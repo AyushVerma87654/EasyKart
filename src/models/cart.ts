@@ -1,4 +1,3 @@
-import { totalAmount } from "./../utility/cart";
 export type CartItem = {
   productId: number;
   quantity: number;
@@ -13,7 +12,6 @@ export type EditCartItemPayload = {
   id: number;
   quantity: number;
   price: number;
-  email: string;
   isLoggedIn: boolean;
 };
 
@@ -29,12 +27,12 @@ export type Coupon = {
   discountPercentage: number;
   expiresAt: Date;
   isActive: boolean;
+  imageUrl: string;
 };
 
 export type CouponMap = Coupon[];
 
 export type DeleteCartItemPayload = {
   id: number;
-  email: string;
   isLoggedIn: boolean;
 };

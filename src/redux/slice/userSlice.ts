@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { LoginPayload, SignUpPayload, User } from "../../models/user";
+import {
+  LoginPayload,
+  ResetPasswordPayload,
+  SignUpPayload,
+  User,
+} from "../../models/user";
 import { CodeVerification } from "../../utility/constant";
 
 export type UserState = {
@@ -15,6 +20,7 @@ export type UserState = {
 
 const initialState: UserState = {
   user: {
+    id: 0,
     fullName: "",
     userName: "",
     email: "",
@@ -110,7 +116,7 @@ function authCompleted(
 ) {
   state.loading = false;
   state.user = action.payload.user;
-  state.accessToken = action.payload.accessToken;
+  state.accessToken = action.payload.accessToken ?? state.accessToken;
   state.isLoggedIn = true;
   localStorage.removeItem("cart");
 }
@@ -148,10 +154,7 @@ function logoutError(
   state.message = action.payload.error;
 }
 
-function accountDeletionInitiated(
-  state: UserState,
-  action: PayloadAction<{ email: string }>
-) {
+function accountDeletionInitiated() {
   return initialState;
 }
 
@@ -189,8 +192,12 @@ function codeVerificationInitiated(
   _action: PayloadAction<{ email: string; verificationCode: string }>
 ) {}
 
-function codeVerificationCompleted(state: UserState) {
+function codeVerificationCompleted(
+  state: UserState,
+  action: PayloadAction<{ accessToken: string }>
+) {
   state.codeVerificationStatus = CodeVerification.CODEVERIFIED;
+  state.accessToken = action.payload.accessToken;
 }
 
 function codeVerificationError(
@@ -212,7 +219,7 @@ function forgetPasswordError(
 
 function resetPasswordInitiated(
   state: UserState,
-  action: PayloadAction<{ password: string; email: string }>
+  _action: PayloadAction<ResetPasswordPayload>
 ) {
   state.loading = true;
 }

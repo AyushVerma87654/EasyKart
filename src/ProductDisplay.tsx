@@ -65,7 +65,6 @@ const ProductDisplay: FC<ProductDisplayProps> = ({
       id: selectedId,
       quantity: inputQuantity,
       price: +individualProduct.price,
-      email: user.email,
       isLoggedIn,
     });
   }

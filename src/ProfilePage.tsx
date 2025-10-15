@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import {
@@ -15,6 +15,7 @@ import {
   updatingProfileInitiatedAction,
 } from "./redux/slice/userSlice";
 import { MdEdit } from "react-icons/md";
+import { fetchOrderInitiatedAction } from "./redux/slice/orderSlice";
 
 interface ProfilePageProps extends ReduxProps {}
 
@@ -26,19 +27,18 @@ const ProfilePage: FC<ProfilePageProps> = ({
   isUpdatingProfile,
   toggleIsUpdatingProfile,
   updateProfile,
+  fetchOrders,
 }) => {
+  useEffect(() => {
+    fetchOrders();
+  }, []);
   const handleClick = () => {
     const fullName = (document.getElementById("fullName") as HTMLInputElement)
       .value;
     const userName = (document.getElementById("userName") as HTMLInputElement)
       .value;
     console.log("fullName,userName", fullName, userName);
-    updateProfile({
-      fullName,
-      userName,
-      email: user.email,
-      isVerified: user.isVerified,
-    });
+    updateProfile({ ...user, fullName, userName });
   };
 
   return (
@@ -78,7 +78,7 @@ const ProfilePage: FC<ProfilePageProps> = ({
         </CartButton>
         <CartButton
           className="w-fit p-2 bg-blue-500 text-rose-700"
-          onClick={() => initiateAccountDeletion({ email: user.email })}
+          onClick={() => initiateAccountDeletion()}
         >
           Delete Account
         </CartButton>
@@ -157,6 +157,7 @@ const mapDispatchToProps = {
   initiateUpdateData: updateDataInitiatedAction,
   toggleIsUpdatingProfile: toggleIsUpdatingProfileAction,
   updateProfile: updatingProfileInitiatedAction,
+  fetchOrders: fetchOrderInitiatedAction,
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
