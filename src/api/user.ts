@@ -7,19 +7,19 @@ export const signupUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  instance
-    .post("/signup", data, { withCredentials: true })
-    .then((res) => res.data);
+  instance.post("/signup", data).then((res) => res.data);
 
 export const loginUser = async (data: {
   email: string;
   password: string;
 }): Promise<ResponsePayload<AuthCompletedResponse>> =>
-  instance.post("/login", data).then((res) => res.data);
+  instance
+    .post("/login", data, { withCredentials: true })
+    .then((res) => res.data);
 
 export const fetchMe = async (): Promise<
   ResponsePayload<AuthCompletedResponse>
-> => instance.get("/me").then((res) => res.data);
+> => instance.get("/me", { withCredentials: true }).then((res) => res.data);
 
 export const logout = async (): Promise<ResponsePayload<{ message: string }>> =>
   instance.get("/logout").then((res) => res.data);

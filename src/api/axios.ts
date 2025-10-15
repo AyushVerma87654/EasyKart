@@ -6,7 +6,7 @@ const API_BASE_URL = import.meta.env.PROD
   : "/api";
 
 const instance = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "https://rental-room-backend.onrender.com",
 });
 
 instance.interceptors.request.use(
