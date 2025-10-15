@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperClass } from "swiper";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -14,7 +15,7 @@ const CouponCarousel: FC<CouponCarouselProps> = ({
   coupons,
   changeCouponCode,
 }) => {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperClass | null>(null);
   if (!coupons || coupons.length === 0) {
     return (
       <div className="text-4xl text-rose-500 h-48 w-full flex items-center justify-center rounded-md">
@@ -39,7 +40,7 @@ const CouponCarousel: FC<CouponCarouselProps> = ({
             delay: 2000,
             disableOnInteraction: false,
           }}
-          onSwiper={(swiper) => (swiperRef.current = swiper)}
+          onSwiper={(swiper: SwiperClass) => (swiperRef.current = swiper)}
         >
           {coupons.map((coupon) => (
             <SwiperSlide
