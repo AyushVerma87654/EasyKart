@@ -103,7 +103,6 @@ const myHoc = withFormik<ResetPasswordPageProps, ResetPasswordProps>({
   handleSubmit: (values, { props }) => {
     console.log("values hand;lesubhdf", values);
     props.resetPassword({
-      email: props.verificationEmail,
       password: values.newPassword,
     });
   },
@@ -112,7 +111,6 @@ const myHoc = withFormik<ResetPasswordPageProps, ResetPasswordProps>({
 })(ResetPasswordPage);
 
 const mapStateToProps = (state: AppState) => ({
-  verificationEmail: verificationEmailSelector(state),
   codeVerificationStatus: codeVerificationStatusSelector(state),
 });
 
