@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "../redux/store";
 
-const API_BASE_URL = import.meta.env.PROD ? "/backApi" : "/api";
+const API_BASE_URL = import.meta.env.PROD ? "/backapi" : "/api";
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
