@@ -12,12 +12,12 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-      "/backapi": {
-        target: "https://easykartbackendbyayush.onrender.com",
-        changeOrigin: true,
-        secure: true,
-        rewrite: (path) => path.replace(/^\/backapi/, ""),
-      },
+      // "/backapi": {
+      //   target: "https://easykartbackendbyayush.onrender.com",
+      //   changeOrigin: true,
+      //   secure: true,
+      //   rewrite: (path) => path.replace(/^\/backapi/, ""),
+      // },
     },
   },
 });
