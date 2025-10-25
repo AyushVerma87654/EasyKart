@@ -56,16 +56,10 @@ function* editingCart(action: PayloadAction<EditCartItemPayload>): Generator {
 
   if (!action.payload.isLoggedIn) {
     const cart = JSON.parse(localStorage.getItem("cart") || "{}") as Cart;
-    const quantity =
-      (cart?.[action.payload.id]?.quantity || 0) + action.payload.quantity;
+    const quantity = (cart?.[action.payload.id] || 0) + action.payload.quantity;
     const newCart = {
       ...cart,
-      [action.payload.id]: {
-        productId: action.payload.id,
-        quantity: quantity,
-        price: action.payload.price,
-        amount: action.payload.price * quantity,
-      },
+      [action.payload.id]: quantity,
     };
     localStorage.setItem("cart", JSON.stringify(newCart));
     yield put(editingCartCompletedAction({ cart: newCart }));
