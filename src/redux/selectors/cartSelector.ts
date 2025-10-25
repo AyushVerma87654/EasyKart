@@ -13,17 +13,23 @@ export const cartMapSelector = createSelector(
   [cartSelector, productSelector],
   (cart, products) =>
     Object.keys(cart).map((id) => ({
-      id: cart[+id]?.productId,
+      id: +id,
       title: products[+id]?.title,
       price: products[+id]?.price,
       thumbnail: products[+id]?.thumbnail,
-      quantity: cart[+id]?.quantity,
+      quantity: cart[+id],
     }))
 );
 
 export const totalAmountSelector = createSelector(
-  [cartStateSelector],
-  (state) => +state.totalAmount.toFixed(2)
+  [cartMapSelector],
+  (cartItems) =>
+    +cartItems
+      .reduce(
+        (total, item) => total + (item.price || 0) * (item.quantity || 0),
+        0
+      )
+      .toFixed(2)
 );
 
 export const couponDiscountPercentageSelector = createSelector(
@@ -32,23 +38,19 @@ export const couponDiscountPercentageSelector = createSelector(
 );
 
 export const finalAmountSelector = createSelector(
-  [cartStateSelector],
-  (state) =>
-    +(
-      (state.totalAmount * (100 - state.couponDiscountPercentage)) /
-      100
-    ).toFixed(2)
+  [cartStateSelector, totalAmountSelector],
+  (state, totalAmount) =>
+    +((totalAmount * (100 - state.couponDiscountPercentage)) / 100).toFixed(2)
 );
 
 export const couponDiscountSelector = createSelector(
-  [cartStateSelector],
-  (state) =>
-    +((state.totalAmount * state.couponDiscountPercentage) / 100).toFixed(2)
+  [cartStateSelector, totalAmountSelector],
+  (state, totalAmount) =>
+    +((totalAmount * state.couponDiscountPercentage) / 100).toFixed(2)
 );
 
-export const totalItemsSelector = createSelector(
-  [cartStateSelector],
-  (state) => state.totalItems
+export const totalItemsSelector = createSelector([cartSelector], (state) =>
+  Object.values(state).reduce((total, current) => total + current, 0)
 );
 
 export const couponCodeSelector = createSelector(

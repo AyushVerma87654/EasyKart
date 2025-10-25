@@ -1,12 +1,5 @@
-export type CartItem = {
-  productId: number;
-  quantity: number;
-  price: number;
-  amount: number;
-};
-
-export type Cart = Record<number, CartItem>;
-export type CartMap = CartItem[];
+export type Cart = Record<number, number>;
+export type CartMap = Cart[];
 
 export type EditCartItemPayload = {
   id: number;

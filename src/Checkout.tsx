@@ -3,18 +3,13 @@ import { connect, ConnectedProps } from "react-redux";
 import { AppState } from "./redux/store";
 import {
   cartMapSelector,
-  totalItemsSelector,
   couponCodeSelector,
-  totalAmountSelector,
   couponDiscountPercentageSelector,
   couponDiscountSelector,
   finalAmountSelector,
+  totalAmountSelector,
 } from "./redux/selectors/cartSelector";
-import {
-  isLoggedInSelector,
-  userSelector,
-} from "./redux/selectors/userSelector";
-import CartButton from "./CartButton"; // reuse your styled button
+import CartButton from "./CartButton";
 import Input from "./Input";
 import { placeOrderInitiatedAction } from "./redux/slice/orderSlice";
 import { PlaceOrderPayload } from "./models/order";
@@ -24,16 +19,14 @@ interface CheckoutProps extends ReduxProps {}
 
 const Checkout: FC<CheckoutProps> = ({
   cartMap,
-  totalItems,
   couponCode,
   totalAmount,
   couponDiscount,
   couponDiscountPercentage,
   finalAmount,
   placeOrder,
-  user,
-  isLoggedIn,
 }) => {
+  const orderReference = generateUniqueKey();
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6 text-center">Checkout</h1>
@@ -75,11 +68,16 @@ const Checkout: FC<CheckoutProps> = ({
       )}
       <div className="border rounded-md p-4 mb-6 shadow-sm">
         <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
-        <label className="flex items-center gap-2">
-          <Input type="radio" checked={true} />
+        <label className="flex items-center gap-2 mb-2">
+          <Input type="radio" checked readOnly />
           <span>Cash on Delivery (COD)</span>
         </label>
+        <label className="flex items-center gap-2 opacity-70 cursor-not-allowed -mt-9">
+          <Input type="radio" disabled />
+          <span>UPI Payments (coming soon)</span>
+        </label>
       </div>
+
       <div className="border rounded-md p-4 mb-6 shadow-sm">
         <h2 className="text-lg font-semibold mb-2">Order Total</h2>
         <div className="flex justify-between">
@@ -111,7 +109,7 @@ const Checkout: FC<CheckoutProps> = ({
             }));
 
             const order: PlaceOrderPayload = {
-              orderReference: generateUniqueKey(),
+              orderReference,
               items,
               totalAmount,
               couponCode,
@@ -130,14 +128,11 @@ const Checkout: FC<CheckoutProps> = ({
 
 const mapStateToProps = (state: AppState) => ({
   cartMap: cartMapSelector(state),
-  totalItems: totalItemsSelector(state),
   couponCode: couponCodeSelector(state),
   totalAmount: totalAmountSelector(state),
   couponDiscountPercentage: couponDiscountPercentageSelector(state),
   couponDiscount: couponDiscountSelector(state),
   finalAmount: finalAmountSelector(state),
-  user: userSelector(state),
-  isLoggedIn: isLoggedInSelector(state),
 });
 
 const mapDispatchToProps = {

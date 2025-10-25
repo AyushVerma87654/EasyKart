@@ -1,13 +1,14 @@
 import axios from "axios";
 import store from "../redux/store";
+import {
+  logoutInitiatedAction,
+  updateAccessTokenAction,
+} from "../redux/slice/userSlice";
 
-const API_BASE_URL = import.meta.env.PROD
-  ? "https://easykartbackendbyayush.onrender.com"
-  : "/api";
+const baseURL = "https://easykartbackendbyayush.onrender.com";
+// const baseURL = "http://localhost:8888";
 
-const instance = axios.create({
-  baseURL: "https://easykartbackendbyayush.onrender.com",
-});
+const instance = axios.create({ baseURL });
 
 instance.interceptors.request.use(
   (config) => {
@@ -27,6 +28,37 @@ instance.interceptors.request.use(
   (error) => {
     return Promise.reject(error);
   }
+);
+
+instance.interceptors.response.use(
+  async (response) => {
+    const originalRequest = response.config;
+    if (response.data.message === "Token Expired") {
+      try {
+        const { data } = await axios.get(baseURL + "/me", {
+          withCredentials: true,
+        });
+        store.dispatch(
+          updateAccessTokenAction(data.responseDetails.accessToken)
+        );
+        if (!originalRequest.headers) originalRequest.headers = {};
+        originalRequest.headers.Authorization = `Bearer ${data.responseDetails.accessToken}`;
+        const retryConfig = {
+          ...originalRequest,
+          data:
+            typeof originalRequest.data === "string"
+              ? JSON.parse(originalRequest.data)
+              : originalRequest.data,
+        };
+        return instance(retryConfig);
+      } catch (err) {
+        store.dispatch(logoutInitiatedAction());
+        return Promise.reject(err);
+      }
+    }
+    return response;
+  },
+  async (error) => Promise.reject(error)
 );
 
 export default instance;

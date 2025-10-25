@@ -66,6 +66,7 @@ const userSlice = createSlice({
     updatingProfileInitiated,
     updatingProfileCompleted,
     updatingProfileError,
+    updateAccessToken,
   },
 });
 
@@ -99,6 +100,7 @@ export const {
   updatingProfileInitiated: updatingProfileInitiatedAction,
   updatingProfileCompleted: updatingProfileCompletedAction,
   updatingProfileError: updatingProfileErrorAction,
+  updateAccessToken: updateAccessTokenAction,
 } = actions;
 
 export default userReducer;
@@ -279,4 +281,8 @@ function updatingProfileError(
   action: PayloadAction<{ error: string }>
 ) {
   state.message = action.payload.error;
+}
+
+function updateAccessToken(state: UserState, action: PayloadAction<string>) {
+  state.accessToken = action.payload;
 }

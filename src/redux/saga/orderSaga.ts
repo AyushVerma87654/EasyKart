@@ -11,6 +11,7 @@ import {
 import { fetchOrders, placeOrder } from "../../api/order";
 import { Order, PlaceOrderPayload } from "../../models/order";
 import { ResponsePayload } from "../../models/response";
+import { deleteCartAction } from "../slice/cartSlice";
 
 function* initiatePlaceOrder(
   action: PayloadAction<PlaceOrderPayload>
@@ -21,6 +22,7 @@ function* initiatePlaceOrder(
       action.payload
     )) as any as ResponsePayload<Order>;
     yield put(placeOrderSuccessAction(res.responseDetails));
+    yield put(deleteCartAction());
   } catch (error: any) {
     yield put(placeOrderFailureAction(error));
   }
